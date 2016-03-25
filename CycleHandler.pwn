@@ -41,6 +41,11 @@ public cycle_nextMission()
 	switch(MapInfo[counter][MapType])
 	{
 		case MAP_TYPE_BOMBING: format(string,sizeof(string),"<!> %s Next Mission is Bombing: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
+		case MAP_TYPE_DM: format(string,sizeof(string),"<!> %s Next Mission is Deathmatch: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
+		case MAP_TYPE_STEALING: format(string,sizeof(string),"<!> %s Next Mission is Stealing: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
+		case MAP_TYPE_NO_RESPAWN_DM: format(string,sizeof(string),"<!> %s Next Mission is Last Man Standing: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
+		case MAP_TYPE_NO_RESPAWN_TDM: format(string,sizeof(string),"<!> %s Next Mission is Last Team Standing: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
+		case MAP_TYPE_TDM: format(string,sizeof(string),"<!> %s Next Mission is Team Deathmatch: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
 		default: format(string,sizeof(string),"<!> %s Next Mission is Race: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
 	}
 	SendClientMessageToAll(COLOR_CYCLE,string);
