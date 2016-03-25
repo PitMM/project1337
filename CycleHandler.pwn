@@ -40,7 +40,7 @@ public cycle_nextMission()
 	string = "Cycle"; // For later to easily add different type of cycles, currnt is only normal. No need to use format here.
 	switch(MapInfo[counter][MapType])
 	{
-		case RACE_TYPE_BOMBING: format(string,sizeof(string),"<!> %s Next Mission is Bombing: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
+		case MAP_TYPE_BOMBING: format(string,sizeof(string),"<!> %s Next Mission is Bombing: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
 		default: format(string,sizeof(string),"<!> %s Next Mission is Race: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
 	}
 	SendClientMessageToAll(COLOR_CYCLE,string);
