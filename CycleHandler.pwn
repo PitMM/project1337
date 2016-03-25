@@ -37,7 +37,7 @@ public cycle_nextMission()
 	if(counter < MaxMaps -1) counter++;
 	else counter = 0;
 	new string[124];
-	string = "Cycle"; // For later to easily add different type of cycles, currnt is only normal. No need to use format here.
+	string = "[CYCLE]"; // For later to easily add different type of cycles, currnt is only normal. No need to use format here.
 	switch(MapInfo[counter][MapType])
 	{
 		case MAP_TYPE_BOMBING: format(string,sizeof(string),"<!> %s Next Mission is Bombing: %s. | Map by %s.",string,MapInfo[counter][MapName],MapInfo[counter][MapBy]);
