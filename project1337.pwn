@@ -18,9 +18,13 @@ public OnGameModeInit()
 	switch(maptype)
 	{
 		case MAP_TYPE_BOMBING: SendRconCommand("loadfs bombing");
-		//...
-		default: SendRconCommand("loadfs race"); //Defualt one is for race.
-	}
+		case MAP_TYPE_DM: SendRconCommand("loadfs deathmatch");
+		case MAP_TYPE_STEALING: SendRconCommand("loadfs stealing");
+		case MAP_TYPE_NO_RESPAWN_DM: SendRconCommand("loadfs lms");
+		case MAP_TYPE_NO_RESPAWN_TDM: SendRconCommand("loadfs lts");
+		case MAP_TYPE_TDM: SendRconCommand("loadfs tdm");
+		default: SendRconCommand("loadfs race");
+	}	
 	//CallRemoteFunction("cycle_sendmissionname",""); We just don't need it.
 }
 
@@ -53,7 +57,11 @@ public TimerFunc()
 		switch(maptype)
 		{
 			case MAP_TYPE_BOMBING: SendRconCommand("unloadfs bombing");
-			//...
+			case MAP_TYPE_DM: SendRconCommand("unloadfs deathmatch");
+			case MAP_TYPE_STEALING: SendRconCommand("unloadfs stealing");
+			case MAP_TYPE_NO_RESPAWN_DM: SendRconCommand("unloadfs lms");
+			case MAP_TYPE_NO_RESPAWN_TDM: SendRconCommand("unloadfs lts");
+			case MAP_TYPE_TDM: SendRconCommand("unloadfs tdm");
 			default: SendRconCommand("unloadfs race");
 		}
 		
