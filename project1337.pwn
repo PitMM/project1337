@@ -17,13 +17,15 @@ public OnGameModeInit()
 
 	switch(maptype)
 	{
-		case MAP_TYPE_BOMBING: SendRconCommand("loadfs bombing");
-		case MAP_TYPE_DM: SendRconCommand("loadfs deathmatch");
-		case MAP_TYPE_STEALING: SendRconCommand("loadfs stealing");
-		case MAP_TYPE_NO_RESPAWN_DM: SendRconCommand("loadfs lms");
-		case MAP_TYPE_NO_RESPAWN_TDM: SendRconCommand("loadfs lts");
-		case MAP_TYPE_TDM: SendRconCommand("loadfs tdm");
-		default: SendRconCommand("loadfs race");
+		case MAP_TYPE_BOMBING: SendRconCommand("loadfs /MissionType/bombing");
+		case MAP_TYPE_DM: SendRconCommand("loadfs /MissionType/deathmatch");
+		case MAP_TYPE_STEALING: SendRconCommand("loadfs /MissionType/stealing");
+		case MAP_TYPE_NO_RESPAWN_DM: SendRconCommand("loadfs /MissionType/lms");
+		case MAP_TYPE_NO_RESPAWN_TDM: SendRconCommand("loadfs /MissionType/lts");
+		case MAP_TYPE_TDM: SendRconCommand("loadfs /MissionType/tdm");
+		case MAP_TYPE_PARKOUR: SendRconCommand("loadfs /MissionType/parkour");
+		case MAP_TYPE_JUMPERS: SendRconCommand("loadfs /MissionType/jumper");
+		default: SendRconCommand("loadfs /MissionType/race");
 	}	
 	//CallRemoteFunction("cycle_sendmissionname",""); We just don't need it.
 }
@@ -56,13 +58,15 @@ public TimerFunc()
 
 		switch(maptype)
 		{
-			case MAP_TYPE_BOMBING: SendRconCommand("unloadfs bombing");
-			case MAP_TYPE_DM: SendRconCommand("unloadfs deathmatch");
-			case MAP_TYPE_STEALING: SendRconCommand("unloadfs stealing");
-			case MAP_TYPE_NO_RESPAWN_DM: SendRconCommand("unloadfs lms");
-			case MAP_TYPE_NO_RESPAWN_TDM: SendRconCommand("unloadfs lts");
-			case MAP_TYPE_TDM: SendRconCommand("unloadfs tdm");
-			default: SendRconCommand("unloadfs race");
+			case MAP_TYPE_BOMBING: SendRconCommand("unloadfs /MissionType/bombing");
+			case MAP_TYPE_DM: SendRconCommand("unloadfs /MissionType/deathmatch");
+			case MAP_TYPE_STEALING: SendRconCommand("unloadfs /MissionType/stealing");
+			case MAP_TYPE_NO_RESPAWN_DM: SendRconCommand("unloadfs /MissionType/lms");
+			case MAP_TYPE_NO_RESPAWN_TDM: SendRconCommand("unloadfs /MissionType/lts");
+			case MAP_TYPE_TDM: SendRconCommand("unloadfs /MissionType/tdm");
+			case MAP_TYPE_PARKOUR: SendRconCommand("unloadfs /MissionType/parkour");
+			case MAP_TYPE_JUMPERS: SendRconCommand("unloadfs /MissionType/jumper");
+			default: SendRconCommand("unloadfs /MissionType/race");
 		}
 		
 		//rewards etc... DO NOT ADD THEM NOW!
