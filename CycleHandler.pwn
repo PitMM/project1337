@@ -12,7 +12,7 @@ enum MAP_INFO_enum
 	MapBy[MAX_PLAYER_NAME] //Name of user who made the map.
 }
 new MapInfo[][MAP_INFO_enum] = {
-	{1,MAP_TYPE_RACE,"MapName",5,30,"TheUser"}
+	{1,MAP_TYPE_RACE,"Trevortex",5,20,"Erza."}
 };	
 
 new MaxMaps;
