@@ -23,7 +23,8 @@ new Veh[MAX_PLAYERS];
 new bool:pRaceFinished[MAX_PLAYERS]= false;
 
 Float: GetSpawn(id,coord) return Float: CallRemoteFunction("map_GetSpawn", "ii",id,coord); 
-Float: GetCP(cp_id,coord) return Float: CallRemoteFunction("ma_RaceCPs", "ii", cp_id,coord);
+Float: GetCP(cp_id,coord) return Float: CallRemoteFunction("map_RaceCPs", "ii", cp_id,coord);
+native IsValidVehicle(vehicleid);
 
 forward RaceGMClock();
 forward PlayerRaceClock(playerid);
@@ -33,14 +34,21 @@ public OnFilterScriptInit()
 {
 	RaceVeh=CallRemoteFunction("map_GetRaceVehicle",""); // To get race vehicle.
 	RaceGMTimer = SetTimer("RaceGMClock",1000,true);
-	SafeSpawn = CallRemoteFunction("map_CheckSafeSpawn",""); // to check if mission has safe spawn
-	MAX_CPs = CallRemoteFunction("map_GetMaxCheckpoints",""); // to check max checkpoints
+	SafeSpawn = CallRemoteFunction("map_CommandsInfo","i",0); // to check if mission has safe spawn
+	MAX_CPs = CallRemoteFunction("map_GetMaxCPs",""); // to check max checkpoints
 	return 1;
 }
 
 public OnFilterScriptExit()
 {
 	KillTimer(RaceGMTimer);
+	for(new i=0; i < 100; i++)
+	{
+		if(IsValidVehicle(i))
+		{
+			DestroyVehicle(i);
+		}
+	}
 	return 1;
 }
 
