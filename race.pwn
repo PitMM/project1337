@@ -53,10 +53,10 @@ public RaceGMClock()
 		{
 			switch(RaceGMSec)
 			{
-				case 1: SendClientMessageToAll(COLOR_RACE,"<!> The race will start in 30 seconds.");
-				case 28: GameTextForAll("~r~~h~~h~ON YOUR MARKS!",1000,3);
-				case 29: GameTextForAll("~y~GET SET!",1000,3);
-				case 30: 
+				case 1: SendClientMessageToAll(COLOR_RACE,"<!> The race will start in 20 seconds.");
+				case 18: GameTextForAll("~r~~h~~h~ON YOUR MARKS!",1000,3);
+				case 19: GameTextForAll("~y~GET SET!",1000,3);
+				case 20: 
 				{
 					GameTextForAll("~g~~h~~h~GO!",1000,3);
 					RaceStarted= true;
@@ -123,7 +123,7 @@ public OnPlayerSpawn(playerid)
 		case false: 
 		{	
 			TogglePlayerControllable(playerid,false);
-			format(string,sizeof(string),"<!> The race will start in %d seconds. Get ready.",(RaceGMSec-30)*-1);
+			format(string,sizeof(string),"<!> The race will start in %d seconds. Get ready.",(RaceGMSec-20)*-1);
 			SendClientMessage(playerid,COLOR_RACE,string);
 		}
 		case true: 
