@@ -1,23 +1,36 @@
 #include <a_samp>
+#include <float>
 #include <stuff\defines>
 
-enum teamdata { Kills,Name[32],Members,ClassID }
+enum teamdata { Kills,Name[32],Members,ClassID,Float:SpawnX,Float:SpawnY,Float:SpawnZ,Float:SpawnAngle,Color[10] }
 enum playerdata { bool:TeamChosen, TeamSelection }
+enum weapondata { WeaponID, Ammo }
 
 new Team[2][teamdata];
 new pInfo[MAX_PLAYERS][playerdata];
-
+new Weapon[3][weapondata];
 
 forward TDM_getTeamNames(team1[32],team2[32]);
 forward TDM_getClassIDs(class1,class2);
 forward TDM_giveRewards(amount);
-
+forward TDM_getWeaponData(weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo);
+forward TDM_getColors(color1[10],color2[10]);
 
 public OnFilterScriptInit()
 {
 	print("\n--------------------------------------");
 	print(" TDM Script -- INITIALIZED!");
 	print("--------------------------------------\n");
+	
+	for(new i = 0;i<2;i++)
+	{
+		Team[i][SpawnX] = CallRemoteFunction("map_GetSpawn","ii",i,0);
+		Team[i][SpawnY] = CallRemoteFunction("map_GetSpawn","ii",i,1);
+		Team[i][SpawnZ] = CallRemoteFunction("map_GetSpawn","ii",i,2);
+		Team[i][SpawnAngle] = CallRemoteFunction("map_GetSpawn","ii",i,3);
+	}
+	
+	Team[1][Members] = 1;
 	
 	return 1;
 }
@@ -32,7 +45,16 @@ public OnFilterScriptExit()
 
 public OnPlayerSpawn(playerid)
 {
-	if(!pInfo[playerid][TeamChosen]) { Team[GetPlayerTeam(playerid)][Members]++; pInfo[playerid][TeamChosen] = true; }
+	SetPlayerPos(playerid,Team[GetPlayerTeam(playerid)][SpawnX],Team[GetPlayerTeam(playerid)][SpawnY],Team[GetPlayerTeam(playerid)][SpawnZ]);
+
+	if(!pInfo[playerid][TeamChosen])
+	{
+		Team[GetPlayerTeam(playerid)][Members]++;
+		pInfo[playerid][TeamChosen] = true;
+	}
+
+	for(new i=0;i<3;i++) { GivePlayerWeapon(playerid,Weapon[i][WeaponID],Weapon[i][Ammo]); }
+
 	return 1;
 }
 
@@ -96,6 +118,24 @@ public TDM_getClassIDs(class1,class2)
 	return 1;
 }
 
+public TDM_getWeaponData(weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo)
+{
+	Weapon[0][WeaponID] = weapon1;
+	Weapon[0][Ammo] = weapon1ammo;
+	Weapon[1][WeaponID] = weapon2;
+	Weapon[1][Ammo] = weapon2ammo;
+	Weapon[2][WeaponID] = weapon3;
+	Weapon[2][Ammo] = weapon3ammo;
+	return 1;
+}
+
+public TDM_getColors(color1[10],color2[10])
+{
+	Team[0][Color] = color1;
+	Team[1][Color] = color2;
+	return 1;
+}
+
 public TDM_giveRewards(amount)
 {
 	new str[128];
@@ -108,7 +148,8 @@ public TDM_giveRewards(amount)
 	
 	for(new i=0;i<MAX_PLAYERS;i++)
 	{
-	    if(GetPlayerTeam(i) == winning_team)
+	    //only people who're spawned in the winning team are getting rewarded
+	    if(GetPlayerTeam(i) == winning_team && pInfo[i][TeamChosen])
 	    {
 	        SendClientMessage(i,COLOR_GREEN,str);
 	        CallRemoteFunction("account_givemoney","ii",i,amount);
