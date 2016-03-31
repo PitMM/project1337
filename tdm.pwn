@@ -30,6 +30,8 @@ public OnFilterScriptInit()
 		Team[i][SpawnAngle] = CallRemoteFunction("map_GetSpawn","ii",i,3);
 	}
 	
+	Team[1][Members] = 1;
+	
 	return 1;
 }
 
@@ -44,6 +46,8 @@ public OnFilterScriptExit()
 public OnPlayerSpawn(playerid)
 {
 	SetPlayerPos(playerid,Team[GetPlayerTeam(playerid)][SpawnX],Team[GetPlayerTeam(playerid)][SpawnY],Team[GetPlayerTeam(playerid)][SpawnZ]);
+	SetPlayerFacingAngle(playerid,Team[GetPlayerTeam(playerid)][SpawnAngle]);
+	SetPlayerColor(playerid,Team[GetPlayerTeam(playerid)][Color]);
 
 	if(!pInfo[playerid][TeamChosen])
 	{
@@ -53,6 +57,7 @@ public OnPlayerSpawn(playerid)
 
 	for(new i=0;i<3;i++) { GivePlayerWeapon(playerid,Weapon[i][WeaponID],Weapon[i][Ammo]); }
 
+    TogglePlayerControllable(playerid,true);
 	return 1;
 }
 
@@ -150,7 +155,7 @@ public TDM_giveRewards(amount)
 	    if(GetPlayerTeam(i) == winning_team && pInfo[i][TeamChosen])
 	    {
 	        SendClientMessage(i,COLOR_GREEN,str);
-	        CallRemoteFunction("account_givemoney","ii",i,amount);
+	        //CallRemoteFunction("account_givemoney","ii",i,amount);
 	    }
 	}
 	
