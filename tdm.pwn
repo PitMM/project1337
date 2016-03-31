@@ -30,8 +30,6 @@ public OnFilterScriptInit()
 		Team[i][SpawnAngle] = CallRemoteFunction("map_GetSpawn","ii",i,3);
 	}
 	
-	Team[1][Members] = 1;
-	
 	return 1;
 }
 
