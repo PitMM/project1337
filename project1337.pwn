@@ -2,6 +2,7 @@
 #include <a_samp>
 #include <crashdetect>
 #include <stuff\defines>
+#include <ZCMD>
 
 main() {}
 
@@ -15,10 +16,7 @@ public OnGameModeInit()
 {
 	mapid = CallRemoteFunction("cycle_getcurrentid",""); //Get's map id from CycleHandler
 	maptype = CallRemoteFunction("cycle_getcurrentmode",""); //Get's map type from CycleHandler
-	printf("%d",mapid);
 	CallRemoteFunction("maphandler_init","i",mapid); //initialize the map handler	
-	
-
 	switch(maptype)
 	{
 		case MAP_TYPE_BOMBING: SendRconCommand("loadfs /MissionType/bombing");
@@ -69,7 +67,6 @@ public TimerFunc()
 			default: SendRconCommand("unloadfs /MissionType/race");
 		}
 		
-		//rewards etc... DO NOT ADD THEM NOW!
 		KillTimer(mTimer);
 		SetTimer("GM_Restart",3000,false); //3 sec
 	}
@@ -81,3 +78,15 @@ public TimerFunc()
 }
 
 public GM_Restart() { return SendRconCommand("gmx"); }
+
+CMD:next(playerid) // just a test command
+{
+	mSec=1;
+	mMin=0;
+	return 1;
+}
+CMD:kill(playerid)
+{
+	SetPlayerHealth(playerid,0);
+	return 1;
+}
