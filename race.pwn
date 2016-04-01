@@ -1,5 +1,6 @@
 //Race (FS)
 #include <a_samp>
+#include <crashdetect>
 #include <stuff\defines>
 
 new bool:RaceStarted= false;
@@ -29,6 +30,10 @@ native IsValidVehicle(vehicleid);
 forward RaceGMClock();
 forward PlayerRaceClock(playerid);
 forward SafeSpawnFun(playerid);
+forward RACE_getColor(color[]);
+
+new COLOR_RACEs[10];
+new COLOR_RACE;
 
 public OnFilterScriptInit() 
 {
@@ -146,10 +151,13 @@ public OnPlayerSpawn(playerid)
 	if(!pAlive[playerid]) TotalRacers++;
 	if(SafeSpawn != 1)
 	{
+		print("test 0");
 		Veh[playerid]=CreateVehicle(RaceVeh,GetSpawn(SpawnID[playerid],0),GetSpawn(SpawnID[playerid],1),GetSpawn(SpawnID[playerid],2),GetSpawn(SpawnID[playerid],3),random(255),random(255),15);
 		PutPlayerInVehicle(playerid,Veh[playerid],0);
+		printf("%d 	%f 	%f 	%f	%f",RaceVeh,GetSpawn(SpawnID[playerid],0),GetSpawn(SpawnID[playerid],1),GetSpawn(SpawnID[playerid],2),GetSpawn(SpawnID[playerid],3));
 		if(!pRaceFinished[playerid])
 		{
+			print("test 1");
 			pMili[playerid]=0,pMin[playerid]=0,pSec[playerid]=0;
 			PlayerRaceTimer[playerid] = SetTimerEx("PlayerRaceClock",1,true,"i",playerid);
 			SetVehicleVirtualWorld(Veh[playerid], 0);
@@ -158,6 +166,7 @@ public OnPlayerSpawn(playerid)
 		}
 		else
 		{
+			print("test 1.1");
 			SetVehicleVirtualWorld(Veh[playerid], 2);
 			SetPlayerVirtualWorld(playerid,2);
 		}
@@ -165,10 +174,12 @@ public OnPlayerSpawn(playerid)
 	}
 	else
 	{
+		print("test 0.1");
 		SetPlayerPos(playerid,GetSpawn(100,0),GetSpawn(100,1),GetSpawn(100,2));
 		SetPlayerFacingAngle(playerid,GetSpawn(100,3));
 		if(!pRaceFinished[playerid])
 		{
+			print("test 1.3");
 			pMili[playerid]=0,pMin[playerid]=0,pSec[playerid]=0;
 			PlayerRaceTimer[playerid] = SetTimerEx("PlayerRaceClock",1,true,"i",playerid);
 		}
@@ -267,5 +278,11 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 	}
 	else if(pCurrentCP[playerid] < MAX_CPs) SetPlayerRaceCheckpoint(playerid,type,GetCP(pCurrentCP[playerid]+1,0),GetCP(pCurrentCP[playerid]+1,1),GetCP(pCurrentCP[playerid]+1,2),GetCP(pCurrentCP[playerid]+2,0),GetCP(pCurrentCP[playerid]+2,1),GetCP(pCurrentCP[playerid]+2,2),GetCP(pCurrentCP[playerid],4));
 	pCurrentCP[playerid]++;
+	return 1;
+}
+public RACE_getColor(color[])
+{
+	format(COLOR_RACEs,sizeof(COLOR_RACE),"%s",color);
+	COLOR_RACE = strval(COLOR_RACEs);
 	return 1;
 }

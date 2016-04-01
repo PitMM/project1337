@@ -1,5 +1,6 @@
  //Idea by: Erza. Remade by: Louay
 #include <a_samp>
+#include <crashdetect>
 #include <streamer>
 
 new Animations= 0;
@@ -10,8 +11,11 @@ new SafeSpawn= 0;
 new Fix= 1; 
 new Flip= 1; 
 
+#define RACE_VEH 539
+
 #define MapName "RACE:Trevortex"
-#define COLOR_SPAWN 0xadff00FF //Different color for each maps!
+#define RaceColor "0xadff00FF" //Different color for each maps!
+#define RACE_COLOR 0xadff00FF
 
 #undef MAX_OBJECTS
 #define MAX_OBJECTS (7)
@@ -35,6 +39,7 @@ forward map_GetCPType(CP_ID,DATA);
 forward map_GetMaxCPs();
 forward Float:map_GetSpawn(id,coord);
 forward map_CommandsInfo(data);
+forward map_GetRaceVehicle();
 
 new race_cp[MAX_CPs][race_cp_enum] =
 {
@@ -112,6 +117,8 @@ public OnFilterScriptInit()
 	Object[5] = CreateDynamicObject(1655,144.3000000,-1815.2000000,0.9000000,0.0000000,0.0000000,270.0000000); //object(waterjumpx2)(2)
 	Object[6] = CreateDynamicObject(1655,144.3999900,-1806.5000000,0.9000000,0.0000000,0.0000000,270.0000000); //object(waterjumpx2)(3)
 	for(new i=0; i < 5; i++) AddPlayerClassEx(1,random(312),-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0); // 
+	
+	CallRemoteFunction("RACE_getColor","s",RaceColor);
 	return 1;
 }
 
@@ -119,7 +126,7 @@ public OnPlayerRequestClass(playerid,classid)
 {
 	TogglePlayerControllable(playerid,false);
 	GameTextForPlayer(playerid,"~g~~h~RACER",1000,3);
-	SetPlayerColor(playerid,COLOR_SPAWN);
+	SetPlayerColor(playerid,RACE_COLOR);
 	SetPlayerPos(playerid,-2431.9709,-1619.5594,526.4762);
 	SetPlayerFacingAngle(playerid,297.8344);
 	SetPlayerCameraPos(playerid,-2427.104736 , -1616.853515 , 528.444702);
@@ -146,4 +153,9 @@ public map_CommandsInfo(data)
 		case 6: return ShopVehicles;
 	}
 	return 1;
+}
+
+public map_GetRaceVehicle()
+{
+	return RACE_VEH;
 }

@@ -1,4 +1,5 @@
 #include <a_samp>
+#include <crashdetect>
 #include <float>
 #include <stuff\defines>
 
@@ -24,10 +25,11 @@ public OnFilterScriptInit()
 	
 	for(new i = 0;i<2;i++)
 	{
-		Team[i][SpawnX] = CallRemoteFunction("map_GetSpawn","ii",i,0);
-		Team[i][SpawnY] = CallRemoteFunction("map_GetSpawn","ii",i,1);
-		Team[i][SpawnZ] = CallRemoteFunction("map_GetSpawn","ii",i,2);
-		Team[i][SpawnAngle] = CallRemoteFunction("map_GetSpawn","ii",i,3);
+		Team[i][SpawnX] = Float:CallRemoteFunction("map_GetSpawn","ii",i,0);
+		Team[i][SpawnY] = Float:CallRemoteFunction("map_GetSpawn","ii",i,1);
+		Team[i][SpawnZ] = Float:CallRemoteFunction("map_GetSpawn","ii",i,2);
+		Team[i][SpawnAngle] = Float:CallRemoteFunction("map_GetSpawn","ii",i,3);
+		printf("ID: %d,	%f 	%f 	%f 	%f",i,Team[i][SpawnX],Team[i][SpawnY],Team[i][SpawnZ],Team[i][SpawnAngle]);
 	}
 	
 	return 1;
