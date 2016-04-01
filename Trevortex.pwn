@@ -1,5 +1,6 @@
  //Idea by: Erza. Remade by: Louay
 #include <a_samp>
+#include <crashdetect>
 #include <streamer>
 
 new Animations= 0;
@@ -10,8 +11,10 @@ new SafeSpawn= 0;
 new Fix= 1; 
 new Flip= 1; 
 
+#define RACE_VEH 539
+
 #define MapName "RACE:Trevortex"
-#define COLOR_SPAWN 0xadff00FF //Different color for each maps!
+#define RACE_COLOR 0xadff00FF //Different color for each maps!
 
 #undef MAX_OBJECTS
 #define MAX_OBJECTS (7)
@@ -35,6 +38,9 @@ forward map_GetCPType(CP_ID,DATA);
 forward map_GetMaxCPs();
 forward Float:map_GetSpawn(id,coord);
 forward map_CommandsInfo(data);
+forward map_ChangeCommandsInfo(ToChange,NewValue);
+forward map_GetRaceVehicle();
+forward map_GetRaceColor();
 
 new race_cp[MAX_CPs][race_cp_enum] =
 {
@@ -55,28 +61,6 @@ new race_cp[MAX_CPs][race_cp_enum] =
 	{820.29999,-1790.2,13.9,0,10.0},
 	{836.90002,-2053.8,12.0,1,10.0}
 };
-
-public Float:map_RaceCPs(CP_ID,DATA)
-{
-	if(CP_ID < 0 || CP_ID > MAX_CPs) return -1.0;
-	switch(DATA)
-	{
-		case 0:
-			return Float:race_cp[CP_ID][race_cp_x];
-		case 1:
-			return race_cp[CP_ID][race_cp_y];
-		case 2:
-			return race_cp[CP_ID][race_cp_z];
-		case 4:
-			return race_cp[CP_ID][race_cp_size];
-		default: 	
-			return -1.0;
-	}
-	return -1.0;
-}
-
-public map_GetCPType(CP_ID,DATA) return race_cp[CP_ID][race_cp_type];
-public map_GetMaxCPs() return MAX_CPs;
 
 new Float:spawns[][4] =
 {
@@ -119,7 +103,7 @@ public OnPlayerRequestClass(playerid,classid)
 {
 	TogglePlayerControllable(playerid,false);
 	GameTextForPlayer(playerid,"~g~~h~RACER",1000,3);
-	SetPlayerColor(playerid,COLOR_SPAWN);
+	SetPlayerColor(playerid,RACE_COLOR);
 	SetPlayerPos(playerid,-2431.9709,-1619.5594,526.4762);
 	SetPlayerFacingAngle(playerid,297.8344);
 	SetPlayerCameraPos(playerid,-2427.104736 , -1616.853515 , 528.444702);
@@ -133,6 +117,24 @@ public OnFilterScriptExit()
 	return 1;
 }
 
+public map_GetCPType(CP_ID,DATA) return race_cp[CP_ID][race_cp_type];
+public map_GetMaxCPs() return MAX_CPs;
+public map_GetRaceVehicle() return RACE_VEH;
+public map_GetRaceColor() return RACE_COLOR;
+
+public Float:map_RaceCPs(CP_ID,DATA)
+{
+	if(CP_ID < 0 || CP_ID > MAX_CPs) return -1.0;
+	switch(DATA)
+	{
+		case 0: return Float:race_cp[CP_ID][race_cp_x];
+		case 1: return race_cp[CP_ID][race_cp_y];
+		case 2: return race_cp[CP_ID][race_cp_z];
+		case 4: return race_cp[CP_ID][race_cp_size];
+	}
+	return -1.0;
+}
+
 public map_CommandsInfo(data)
 {
 	switch(data)
@@ -144,6 +146,21 @@ public map_CommandsInfo(data)
 		case 4: return Shop;
 		case 5: return ShopWeapons;
 		case 6: return ShopVehicles;
+	}
+	return 1;
+}
+
+public map_ChangeCommandsInfo(ToChange,NewValue)
+{
+	switch(ToChange)
+	{
+		case 0: SafeSpawn=NewValue;
+		case 1: Animations=NewValue;
+		case 2: Fix=NewValue;
+		case 3: Flip=NewValue;
+		case 4: Shop=NewValue;
+		case 5: ShopWeapons=NewValue;
+		case 6: ShopVehicles=NewValue;
 	}
 	return 1;
 }

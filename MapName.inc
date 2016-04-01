@@ -1,4 +1,5 @@
-new MapName[]=
+new MapName[][]=
 {
-	"Trevortex"
+	"Trevortex",
+	"De_Dust_2"
 };

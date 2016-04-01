@@ -1,10 +1,14 @@
 //GAMEMODE
 #include <a_samp>
+#include <crashdetect>
 #include <stuff\defines>
+#include <ZCMD>
+
+main() {}
 
 new mapid,maptype,mMin,mSec,mTimer;
 
-forward GM_StartTimer(time);
+forward GM_StartTimer();
 forward TimerFunc();
 forward GM_Restart();
 
@@ -12,9 +16,7 @@ public OnGameModeInit()
 {
 	mapid = CallRemoteFunction("cycle_getcurrentid",""); //Get's map id from CycleHandler
 	maptype = CallRemoteFunction("cycle_getcurrentmode",""); //Get's map type from CycleHandler
-
 	CallRemoteFunction("maphandler_init","i",mapid); //initialize the map handler	
-
 	switch(maptype)
 	{
 		case MAP_TYPE_BOMBING: SendRconCommand("loadfs /MissionType/bombing");
@@ -30,22 +32,18 @@ public OnGameModeInit()
 	//CallRemoteFunction("cycle_sendmissionname",""); We just don't need it.
 }
 
-public GM_StartTimer(time) //maphandler
+public GM_StartTimer() //maphandler
 {
 	mMin = CallRemoteFunction("cycle_getcurrentmaptime","i",0);
 	mSec = CallRemoteFunction("cycle_getcurrentmaptime","i",1);
-	mTimer = SetTimer("TimeFunc",1000,true);
+	mTimer = SetTimer("TimerFunc",1000,true);
+	return 1;
 }
 
 public TimerFunc()
 {
 	new string[10];
 	mSec--;
-	if(mMin < 10) format(string,sizeof(string),"0%d",mMin);
-	else format(string,sizeof(string),"%d",mMin);
-	if(mSec < 10) format(string,sizeof(string),"%s:0%d",string,mSec);
-	else format(string,sizeof(string),"%s:%d",string,mSec);
-	CallRemoteFunction("textdraw_UpdateMissionClock","ii",mMin,mSec);//Clock Textdraw update should be added here.
 	if(mSec < 1 && mMin > 0) 
 	{ 
 		mSec = 59;
@@ -69,10 +67,20 @@ public TimerFunc()
 			default: SendRconCommand("unloadfs /MissionType/race");
 		}
 		
-		//rewards etc... DO NOT ADD THEM NOW!
 		KillTimer(mTimer);
 		SetTimer("GM_Restart",3000,false); //3 sec
 	}
+	if(mMin < 10) format(string,sizeof(string),"0%d",mMin);
+	else format(string,sizeof(string),"%d",mMin);
+	if(mSec < 10) format(string,sizeof(string),"%s:0%d",string,mSec);
+	else format(string,sizeof(string),"%s:%d",string,mSec);
+	CallRemoteFunction("textdraw_Clock","s",string);//Clock Textdraw update should be added here.
 }
 
 public GM_Restart() { return SendRconCommand("gmx"); }
+
+CMD:kill(playerid)
+{
+	SetPlayerHealth(playerid,0);
+	return 1;
+}

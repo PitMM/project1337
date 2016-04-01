@@ -1,5 +1,6 @@
 //Race (FS)
 #include <a_samp>
+#include <crashdetect>
 #include <stuff\defines>
 
 new bool:RaceStarted= false;
@@ -30,12 +31,16 @@ forward RaceGMClock();
 forward PlayerRaceClock(playerid);
 forward SafeSpawnFun(playerid);
 
+
+new COLOR_RACE;
+
 public OnFilterScriptInit() 
 {
 	RaceVeh=CallRemoteFunction("map_GetRaceVehicle",""); // To get race vehicle.
 	RaceGMTimer = SetTimer("RaceGMClock",1000,true);
 	SafeSpawn = CallRemoteFunction("map_CommandsInfo","i",0); // to check if mission has safe spawn
 	MAX_CPs = CallRemoteFunction("map_GetMaxCPs",""); // to check max checkpoints
+	COLOR_RACE = CallRemoteFunction("map_GetRaceColor",""); //to get race color
 	return 1;
 }
 
@@ -80,7 +85,7 @@ public RaceGMClock()
 public PlayerRaceClock(playerid)
 {
 	if(!RaceStarted) return 1;
-	pMili[playerid]++;
+	pMili[playerid]+=100;
 	if(pMili[playerid] == 1000)
 	{
 		pSec[playerid]++;
@@ -137,7 +142,7 @@ public OnPlayerSpawn(playerid)
 		case true: 
 		{
 			TogglePlayerControllable(playerid,true);
-			SendClientMessage(playerid,COLOR_RACE,"HURRY UP! The race has already started.");
+			SendClientMessage(playerid,COLOR_RACE,"<!> HURRY UP! The race has already started.");
 		}	
 	}
 	if(SpawnID[playerid] == -1) CurrentSpawn++;
@@ -148,10 +153,11 @@ public OnPlayerSpawn(playerid)
 	{
 		Veh[playerid]=CreateVehicle(RaceVeh,GetSpawn(SpawnID[playerid],0),GetSpawn(SpawnID[playerid],1),GetSpawn(SpawnID[playerid],2),GetSpawn(SpawnID[playerid],3),random(255),random(255),15);
 		PutPlayerInVehicle(playerid,Veh[playerid],0);
+		printf("%d 	%f 	%f 	%f	%f",RaceVeh,GetSpawn(SpawnID[playerid],0),GetSpawn(SpawnID[playerid],1),GetSpawn(SpawnID[playerid],2),GetSpawn(SpawnID[playerid],3));
 		if(!pRaceFinished[playerid])
 		{
 			pMili[playerid]=0,pMin[playerid]=0,pSec[playerid]=0;
-			PlayerRaceTimer[playerid] = SetTimerEx("PlayerRaceClock",1,true,"i",playerid);
+			PlayerRaceTimer[playerid] = SetTimerEx("PlayerRaceClock",100,true,"i",playerid);
 			SetVehicleVirtualWorld(Veh[playerid], 0);
 			SetPlayerVirtualWorld(playerid,0);
 			SetPlayerRaceCheckpoint(playerid,CallRemoteFunction("map_GetCPType","ii",pCurrentCP[playerid],3),GetCP(pCurrentCP[playerid],0),GetCP(pCurrentCP[playerid],1),GetCP(pCurrentCP[playerid],2),GetCP(pCurrentCP[playerid]+1,0),GetCP(pCurrentCP[playerid]+1,1),GetCP(pCurrentCP[playerid]+1,2),10.0);
@@ -250,8 +256,8 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 		new Pos=GetPlayerPosition(playerid);
 		CurrentRacePos++;
 		new Prize=floatround(20000/Pos, floatround_round);
-		CallRemoteFunction("textdraw_UpdatePlayerRaceTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
-		CallRemoteFunction("account_givemoney","ii",playerid,Prize);
+		//CallRemoteFunction("textdraw_UpdatePlayerRaceTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
+		//CallRemoteFunction("account_givemoney","ii",playerid,Prize);
 		GetPlayerName(playerid,string,sizeof(string));
 		switch(Pos)
 		{

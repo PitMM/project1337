@@ -1,10 +1,32 @@
 #include <a_samp>
+#include <crashdetect>
 #include <float>
 #include <stuff\defines>
 
-enum teamdata { Kills,Name[32],Members,ClassID,Float:SpawnX,Float:SpawnY,Float:SpawnZ,Float:SpawnAngle,Color[10] }
-enum playerdata { bool:TeamChosen, TeamSelection }
-enum weapondata { WeaponID, Ammo }
+enum teamdata 
+{ 
+	Kills,
+	Name[32],
+	Members,
+	ClassID,
+	Float:SpawnX,
+	Float:SpawnY,
+	Float:SpawnZ,
+	Float:SpawnAngle,
+	Color
+};
+
+enum playerdata 
+{ 
+	bool:TeamChosen, 
+	TeamSelection 
+};
+
+enum weapondata 
+{ 
+	WeaponID, 
+	Ammo
+};
 
 new Team[2][teamdata];
 new pInfo[MAX_PLAYERS][playerdata];
@@ -14,7 +36,7 @@ forward TDM_getTeamNames(team1[32],team2[32]);
 forward TDM_getClassIDs(class1,class2);
 forward TDM_giveRewards(amount);
 forward TDM_getWeaponData(weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo);
-forward TDM_getColors(color1[10],color2[10]);
+forward TDM_getColors(color1,color2);
 
 public OnFilterScriptInit()
 {
@@ -24,12 +46,12 @@ public OnFilterScriptInit()
 	
 	for(new i = 0;i<2;i++)
 	{
-		Team[i][SpawnX] = CallRemoteFunction("map_GetSpawn","ii",i,0);
-		Team[i][SpawnY] = CallRemoteFunction("map_GetSpawn","ii",i,1);
-		Team[i][SpawnZ] = CallRemoteFunction("map_GetSpawn","ii",i,2);
-		Team[i][SpawnAngle] = CallRemoteFunction("map_GetSpawn","ii",i,3);
+		Team[i][SpawnX] = Float:CallRemoteFunction("map_GetSpawn","ii",i,0);
+		Team[i][SpawnY] = Float:CallRemoteFunction("map_GetSpawn","ii",i,1);
+		Team[i][SpawnZ] = Float:CallRemoteFunction("map_GetSpawn","ii",i,2);
+		Team[i][SpawnAngle] = Float:CallRemoteFunction("map_GetSpawn","ii",i,3);
 	}
-	
+	CallRemoteFunction("map_Load","");
 	return 1;
 }
 
@@ -107,8 +129,8 @@ public OnPlayerDisconnect(playerid)
 /* -- CROSS SCRIPTING -- */
 public TDM_getTeamNames(team1[32],team2[32])
 {
-	Team[0][Name] = team1;
-	Team[1][Name] = team2;
+	format(Team[0][Name],32,"%s",team1);
+	format(Team[1][Name],32,"%s",team2);
 	return 1;
 }
 
@@ -130,7 +152,7 @@ public TDM_getWeaponData(weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3
 	return 1;
 }
 
-public TDM_getColors(color1[10],color2[10])
+public TDM_getColors(color1,color2)
 {
 	Team[0][Color] = color1;
 	Team[1][Color] = color2;
@@ -140,19 +162,20 @@ public TDM_getColors(color1[10],color2[10])
 public TDM_giveRewards(amount)
 {
 	new str[128];
-	format(str,sizeof(str),"You have received $%i because your team has won the Team-Deathmatch!",amount);
 	
 	new winning_team;
 	if(Team[0][Kills] == Team[1][Kills]) { winning_team = 2; } //-1 can't be used here
 	else if(Team[0][Kills] > Team[1][Kills]) { winning_team = 0; }
 	else { winning_team = 1; }
-	
+	format(str,sizeof(str),"<!> Team: %s has won the Team-Deathmatch! Reward: $%d",Team[winning_team][Name],amount);
+	SendClientMessageToAll(Team[winning_team][Color],str);
+	format(str,sizeof(str),"<!> You have received $%i because your team has won the Team-Deathmatch!",amount);
 	for(new i=0;i<MAX_PLAYERS;i++)
 	{
 	    //only people who're spawned in the winning team are getting rewarded
 	    if(GetPlayerTeam(i) == winning_team && pInfo[i][TeamChosen])
 	    {
-	        SendClientMessage(i,COLOR_GREEN,str);
+	        SendClientMessage(i,Team[winning_team][Color],str);
 	        //CallRemoteFunction("account_givemoney","ii",i,amount);
 	    }
 	}

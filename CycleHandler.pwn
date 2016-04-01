@@ -1,5 +1,6 @@
 //CYCLE HANDLER (FS)
 #include <a_samp>
+#include <crashdetect>
 #include <stuff\defines>
 
 enum MAP_INFO_enum
@@ -12,8 +13,9 @@ enum MAP_INFO_enum
 	MapBy[MAX_PLAYER_NAME] //Name of user who made the map.
 }
 new MapInfo[][MAP_INFO_enum] = {
-	{1,MAP_TYPE_RACE,"Trevortex",5,20,"Erza."}
-};	
+	{0,MAP_TYPE_RACE,"Trevortex",5,20,"Erza."},
+	{1,MAP_TYPE_TDM,"De Dust 2",5,0,"JimmySpaceTravel1337"}
+};
 
 new MaxMaps;
 new counter;
