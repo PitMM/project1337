@@ -79,12 +79,6 @@ public TimerFunc()
 
 public GM_Restart() { return SendRconCommand("gmx"); }
 
-CMD:next(playerid) // just a test command
-{
-	mSec=1;
-	mMin=0;
-	return 1;
-}
 CMD:kill(playerid)
 {
 	SetPlayerHealth(playerid,0);
