@@ -18,7 +18,7 @@ new Flip= 0; //for flip command
 #define TEAM_2_NAME "Army"
 
 #define TEAM_1_SKIN 30	//team 0
-#define TEAM_2_SKIN 187 //team 1
+#define TEAM_2_SKIN 287 //team 1
 #define TEAM_3_SKIN 0	//team 0
 #define TEAM_4_SKIN 0   //team 1
 #define TEAM_5_SKIN 0	//team 0
@@ -100,8 +100,8 @@ forward map_Load();
 
 new Float:spawns[][] =
 {
-	{569.4968,-3165.8940,10.0211,265.9208}, //class 0
-	{593.5507,-2374.8606,5.3859,174.7395}, //class 1
+	{593.5507,-2374.8606,5.3859,174.7395},//class 0
+	{569.4968,-3165.8940,10.0211,265.9208}, //class 1
 	{0.0,	0.0,	0.0}, //class 2
 	{0.0,	0.0,	0.0}, //class 3 
 	{0.0,	0.0,	0.0}, //class 4
