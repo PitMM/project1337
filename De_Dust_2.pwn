@@ -670,6 +670,7 @@ public map_Load()
 	CallRemoteFunction("TDM_getTeamNames","ss",TEAM_1_NAME,TEAM_2_NAME);
 	CallRemoteFunction("TDM_getClassIDs","ii",Class[0],Class[1]);
 	CallRemoteFunction("TDM_getWeaponData","iiiiii",WEAPON_1,WEAPON_1_AMMO,WEAPON_2,WEAPON_2_AMMO,WEAPON_3,WEAPON_3_AMMO);
-	CallRemoteFunction("TDM_getColors","ss",TeamColor[0],TeamColor[1]);
+	CallRemoteFunction("TDM_getColors","dd",TeamColor[0],TeamColor[1]);
+	
 	return 1;
 }

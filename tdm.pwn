@@ -34,7 +34,7 @@ new Weapon[3][weapondata];
 
 forward TDM_getTeamNames(team1[32],team2[32]);
 forward TDM_getClassIDs(class1,class2);
-forward TDM_giveRewards(amount);
+forward TDM_giveRewards();
 forward TDM_getWeaponData(weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo);
 forward TDM_getColors(color1,color2);
 
@@ -159,25 +159,33 @@ public TDM_getColors(color1,color2)
 	return 1;
 }
 
-public TDM_giveRewards(amount)
+public TDM_giveRewards()
 {
 	new str[128];
-	
+	new amount =20000;
 	new winning_team;
 	if(Team[0][Kills] == Team[1][Kills]) { winning_team = 2; } //-1 can't be used here
 	else if(Team[0][Kills] > Team[1][Kills]) { winning_team = 0; }
 	else { winning_team = 1; }
-	format(str,sizeof(str),"<!> Team: %s has won the Team-Deathmatch! Reward: $%d",Team[winning_team][Name],amount);
-	SendClientMessageToAll(Team[winning_team][Color],str);
-	format(str,sizeof(str),"<!> You have received $%i because your team has won the Team-Deathmatch!",amount);
-	for(new i=0;i<MAX_PLAYERS;i++)
+	if(winning_team != 2)
 	{
-	    //only people who're spawned in the winning team are getting rewarded
-	    if(GetPlayerTeam(i) == winning_team && pInfo[i][TeamChosen])
-	    {
-	        SendClientMessage(i,Team[winning_team][Color],str);
-	        //CallRemoteFunction("account_givemoney","ii",i,amount);
-	    }
+		format(str,sizeof(str),"<!> Team: %s has won the Team-Deathmatch! Reward: $%d",Team[winning_team][Name],amount);
+		SendClientMessageToAll(Team[winning_team][Color],str);
+		format(str,sizeof(str),"<!> You have received $%i because your team has won the Team-Deathmatch!",amount);
+		for(new i=0;i<MAX_PLAYERS;i++)
+		{
+			//only people who're spawned in the winning team are getting rewarded
+			if(GetPlayerTeam(i) == winning_team && pInfo[i][TeamChosen])
+			{
+				SendClientMessage(i,Team[winning_team][Color],str);
+				//CallRemoteFunction("account_givemoney","ii",i,amount);
+			}
+		}
+	}	
+	else
+	{
+		format(str,sizeof(str),"<!> IT'S A DRAW! No team has won the Team-Deathmatch.",amount);
+		SendClientMessageToAll(Team[random(2)][Color],str);
 	}
 	
 	return 1;

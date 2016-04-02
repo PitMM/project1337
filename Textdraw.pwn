@@ -5,8 +5,9 @@
 new Text:Clock;
 
 forward textdraw_Clock(string[]);
+forward Textdraw_SetUp();
 
-public OnFilterScriptInit()
+public Textdraw_SetUp()
 {
 	Clock = TextDrawCreate(549.0, 24.0, "00:00");
 	TextDrawLetterSize(Clock, 0.55, 2.0);
@@ -25,6 +26,7 @@ public textdraw_Clock(string[])
 public OnPlayerConnect(playerid)
 {
 	TextDrawShowForPlayer(playerid,Clock);
+	SendClientMessage(playerid,-1,"Test");
 	return 1;
 }
 

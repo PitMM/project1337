@@ -153,7 +153,6 @@ public OnPlayerSpawn(playerid)
 	{
 		Veh[playerid]=CreateVehicle(RaceVeh,GetSpawn(SpawnID[playerid],0),GetSpawn(SpawnID[playerid],1),GetSpawn(SpawnID[playerid],2),GetSpawn(SpawnID[playerid],3),random(255),random(255),15);
 		PutPlayerInVehicle(playerid,Veh[playerid],0);
-		printf("%d 	%f 	%f 	%f	%f",RaceVeh,GetSpawn(SpawnID[playerid],0),GetSpawn(SpawnID[playerid],1),GetSpawn(SpawnID[playerid],2),GetSpawn(SpawnID[playerid],3));
 		if(!pRaceFinished[playerid])
 		{
 			pMili[playerid]=0,pMin[playerid]=0,pSec[playerid]=0;

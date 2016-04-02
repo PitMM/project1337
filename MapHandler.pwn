@@ -3,7 +3,7 @@
 #include <crashdetect>
 #include <stuff\MapName>
 
-forward maphandler_reset();
+forward maphandler_reset(mapid);
 forward maphandler_init(mapid);
 
 public maphandler_init(mapid)
@@ -17,9 +17,9 @@ public maphandler_init(mapid)
 	return 1;
 }
 
-public maphandler_reset()
+public maphandler_reset(mapid)
 {
 	new string[70];
-	format(string,sizeof(string),"unloadfs /Maps/%s",MapName[CallRemoteFunction("cycle_getcurrentid","")]);
+	format(string,sizeof(string),"unloadfs /Maps/%s",MapName[mapid]);
 	return SendRconCommand(string);
 }
