@@ -2,6 +2,7 @@
 #include <a_samp>
 #include <crashdetect>
 #include <stuff\defines>
+#include <zcmd>//need to remove
 
 new bool:RaceStarted= false;
 new CurrentSpawn=-1;
@@ -158,7 +159,7 @@ public OnPlayerSpawn(playerid)
 		y=GetSpawn(SpawnID[playerid],1);
 		z=GetSpawn(SpawnID[playerid],2);
 		a=GetSpawn(SpawnID[playerid],3);
-		Veh[playerid]=CreateVehicle(RaceVeh,x,y,z,a,random(255),random(255),15);
+		Veh[playerid]=CreateVehicle(RaceVeh,x,y,z,a,random(255),random(255),-1);
 		printf("Playerid: %d CurrentSpawn: %d SpawnID: %d x: %f y: %f z: %f a: %f",playerid,CurrentSpawn,SpawnID[playerid],x,y,z,a);
 		PutPlayerInVehicle(playerid,Veh[playerid],0);
 		if(!pRaceFinished[playerid])
@@ -296,5 +297,14 @@ public RACE_EndMission()
 			DisablePlayerCheckpoint(i);
 		}
 	}
+	return 1;
+}
+
+CMD:v(playerid)
+{
+	new Float:x,Float:y,Float:z,Float:a;
+	GetPlayerPos(playerid,x,y,z);
+	GetPlayerFacingAngle(playerid,a);
+	CreateVehicle(RaceVeh,x,y,z,a,0,0,-1);
 	return 1;
 }

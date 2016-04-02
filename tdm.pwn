@@ -74,7 +74,6 @@ public OnPlayerSpawn(playerid)
 		else format(string,sizeof(string),"<!> You have chosen team %s, Your mission is to kill %s.",Team[0][Name],Team[1][Name]);
 		SendClientMessage(playerid,Team[GetPlayerTeam(playerid)][Color],string);
 	}
-	printf("%d : %d",SkinData[pInfo[playerid][pClassID]][Weapon1],SkinData[pInfo[playerid][pClassID]][Ammo1]);
 	GivePlayerWeapon(playerid,SkinData[pInfo[playerid][pClassID]][Weapon1],SkinData[pInfo[playerid][pClassID]][Ammo1]);
 	GivePlayerWeapon(playerid,SkinData[pInfo[playerid][pClassID]][Weapon2],SkinData[pInfo[playerid][pClassID]][Ammo2]);
 	GivePlayerWeapon(playerid,SkinData[pInfo[playerid][pClassID]][Weapon3],SkinData[pInfo[playerid][pClassID]][Ammo3]);
@@ -151,7 +150,6 @@ public TDM_getClassIDs(class0,class1,class2,class3,class4,class5,class6,class7)
 
 public TDM_getWeaponData(classid,weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo)
 {
-	printf("%d : %d : %d : %d : %d : %d : %d",classid,weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo);
 	SkinData[classid][Weapon1] = weapon1;
 	SkinData[classid][Ammo1] = weapon1ammo;
 	SkinData[classid][Weapon2] = weapon2;

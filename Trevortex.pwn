@@ -1,7 +1,6 @@
  //Idea by: Erza. Remade by: Louay
 #include <a_samp>
 #include <crashdetect>
-#include <streamer>
 
 new Animations= 0;
 new Shop= 0; 
@@ -88,13 +87,13 @@ public Float:map_GetSpawn(id,coord)
 public OnFilterScriptInit()
 {
 	print(""MapName" initialized");
-	Object[0] = CreateDynamicObject(13593,-2247.8000000,-1729.9000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(1)
-	Object[1] = CreateDynamicObject(13593,-2246.1001000,-1727.7000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(2)
-	Object[2] = CreateDynamicObject(13593,-2244.3999000,-1725.5000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(3)
-	Object[3] = CreateDynamicObject(13593,-2242.6001000,-1723.5000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(4)
-	Object[4] = CreateDynamicObject(13593,-2240.8000000,-1721.5000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(5)
-	Object[5] = CreateDynamicObject(1655,144.3000000,-1815.2000000,0.9000000,0.0000000,0.0000000,270.0000000); //object(waterjumpx2)(2)
-	Object[6] = CreateDynamicObject(1655,144.3999900,-1806.5000000,0.9000000,0.0000000,0.0000000,270.0000000); //object(waterjumpx2)(3)
+	Object[0] = CreateObject(13593,-2247.8000000,-1729.9000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(1)
+	Object[1] = CreateObject(13593,-2246.1001000,-1727.7000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(2)
+	Object[2] = CreateObject(13593,-2244.3999000,-1725.5000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(3)
+	Object[3] = CreateObject(13593,-2242.6001000,-1723.5000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(4)
+	Object[4] = CreateObject(13593,-2240.8000000,-1721.5000000,479.7000100,0.0000000,0.0000000,226.0000000); //object(kickramp03)(5)
+	Object[5] = CreateObject(1655,144.3000000,-1815.2000000,0.9000000,0.0000000,0.0000000,270.0000000); //object(waterjumpx2)(2)
+	Object[6] = CreateObject(1655,144.3999900,-1806.5000000,0.9000000,0.0000000,0.0000000,270.0000000); //object(waterjumpx2)(3)
 	for(new i=0; i < 5; i++) AddPlayerClassEx(1,random(312),-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0); // 
 	return 1;
 }
@@ -113,7 +112,7 @@ public OnPlayerRequestClass(playerid,classid)
 
 public OnFilterScriptExit()
 {
-    for(new i=0;i<MAX_OBJECTS;i++) DestroyDynamicObject(i);
+    for(new i=0;i<MAX_OBJECTS;i++) DestroyObject(i);
 	return 1;
 }
 

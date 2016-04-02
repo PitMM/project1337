@@ -13,9 +13,12 @@ enum MAP_INFO_enum
 	MapBy[MAX_PLAYER_NAME] //Name of user who made the map.
 }
 new MapInfo[][MAP_INFO_enum] = {
-	{0,MAP_TYPE_RACE,"Trevortex",4,20,"Erza."},
-	{1,MAP_TYPE_TDM,"De Dust 2",5,0,"JimmySpaceTravel1337"},
-	{2,MAP_TYPE_TDM,"The Caribbeans",5,0,"JimmySpaceTravel1337"}
+	{0,MAP_TYPE_RACE,"Trevortex",4,20,"Erza."}, 
+	{1,MAP_TYPE_TDM,"De Dust 2",5,0,"JimmySpaceTravel1337"}, 
+	{2,MAP_TYPE_TDM,"The Caribbeans",5,0,"JimmySpaceTravel1337"}, 
+	{3,MAP_TYPE_RACE,"Reckless Bikers",4,20,"Louay."},
+	{4,MAP_TYPE_RACE,"Fat N Furious 2012",3,20,"JimmySpaceTravel1337"},
+	{5,MAP_TYPE_RACE,"Fat N Furious Beneath The Wheel",4,20,"JimmySpaceTravel1337"}
 };
 
 new MaxMaps;
