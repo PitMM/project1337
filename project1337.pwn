@@ -17,6 +17,7 @@ public OnGameModeInit()
 	mapid = CallRemoteFunction("cycle_getcurrentid",""); //Get's map id from CycleHandler
 	maptype = CallRemoteFunction("cycle_getcurrentmode",""); //Get's map type from CycleHandler
 	CallRemoteFunction("maphandler_init","i",mapid); //initialize the map handler	
+	CallRemoteFunction("Textdraw_SetUp","");
 	switch(maptype)
 	{
 		case MAP_TYPE_BOMBING: SendRconCommand("loadfs /MissionType/bombing");
@@ -51,23 +52,12 @@ public TimerFunc()
 	}
 	else if(mSec == 0 && mMin == 0)
 	{
-		CallRemoteFunction("maphandler_reset","");
-		CallRemoteFunction("cycle_nextMission","");
-
 		switch(maptype)
 		{
-			case MAP_TYPE_BOMBING: SendRconCommand("unloadfs /MissionType/bombing");
-			case MAP_TYPE_DM: SendRconCommand("unloadfs /MissionType/deathmatch");
-			case MAP_TYPE_STEALING: SendRconCommand("unloadfs /MissionType/stealing");
-			case MAP_TYPE_NO_RESPAWN_DM: SendRconCommand("unloadfs /MissionType/lms");
-			case MAP_TYPE_NO_RESPAWN_TDM: SendRconCommand("unloadfs /MissionType/lts");
-			case MAP_TYPE_TDM: SendRconCommand("unloadfs /MissionType/tdm");
-			case MAP_TYPE_PARKOUR: SendRconCommand("unloadfs /MissionType/parkour");
-			case MAP_TYPE_JUMPERS: SendRconCommand("unloadfs /MissionType/jumper");
-			default: SendRconCommand("unloadfs /MissionType/race");
+			case MAP_TYPE_TDM: CallRemoteFunction("TDM_giveRewards","");
 		}
-		
 		KillTimer(mTimer);
+		CallRemoteFunction("cycle_nextMission","");
 		SetTimer("GM_Restart",3000,false); //3 sec
 	}
 	if(mMin < 10) format(string,sizeof(string),"0%d",mMin);
@@ -77,10 +67,32 @@ public TimerFunc()
 	CallRemoteFunction("textdraw_Clock","s",string);//Clock Textdraw update should be added here.
 }
 
-public GM_Restart() { return SendRconCommand("gmx"); }
+public GM_Restart() 
+{ 
+	CallRemoteFunction("maphandler_reset","i" ,mapid);
+	switch(maptype)
+	{
+		case MAP_TYPE_BOMBING: SendRconCommand("unloadfs /MissionType/bombing");
+		case MAP_TYPE_DM: SendRconCommand("unloadfs /MissionType/deathmatch");
+		case MAP_TYPE_STEALING: SendRconCommand("unloadfs /MissionType/stealing");
+		case MAP_TYPE_NO_RESPAWN_DM: SendRconCommand("unloadfs /MissionType/lms");
+		case MAP_TYPE_NO_RESPAWN_TDM: SendRconCommand("unloadfs /MissionType/lts");
+		case MAP_TYPE_TDM: SendRconCommand("unloadfs /MissionType/tdm");
+		case MAP_TYPE_PARKOUR: SendRconCommand("unloadfs /MissionType/parkour");
+		case MAP_TYPE_JUMPERS: SendRconCommand("unloadfs /MissionType/jumper");
+		default: SendRconCommand("unloadfs /MissionType/race");
+	}
+	return SendRconCommand("gmx"); 
+}
 
 CMD:kill(playerid)
 {
 	SetPlayerHealth(playerid,0);
+	return 1;
+}
+CMD:next(playerid)
+{
+	mMin=0;
+	mSec=3;
 	return 1;
 }
