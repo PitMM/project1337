@@ -8,75 +8,76 @@ enum teamdata
 	Kills,
 	Name[32],
 	Members,
-	ClassID,
-	Float:SpawnX,
-	Float:SpawnY,
-	Float:SpawnZ,
-	Float:SpawnAngle,
+	ClassID1,
+	ClassID2,
+	ClassID3,
+	ClassID4,
 	Color
 };
 
 enum playerdata 
 { 
 	bool:TeamChosen, 
-	TeamSelection 
+	TeamSelection,
+	pClassID
 };
 
-enum weapondata 
-{ 
-	WeaponID, 
-	Ammo
-};
+enum skindata
+{
+	Float:SpawnX,
+	Float:SpawnY,
+	Float:SpawnZ,
+	Float:SpawnAngle,
+	Weapon1,
+	Ammo1,
+	Weapon2,
+	Ammo2,
+	Weapon3,
+	Ammo3,
+};	
 
+new SkinData[8][skindata];
 new Team[2][teamdata];
 new pInfo[MAX_PLAYERS][playerdata];
-new Weapon[3][weapondata];
 
 forward TDM_getTeamNames(team1[32],team2[32]);
-forward TDM_getClassIDs(class1,class2);
+forward TDM_getClassIDs(class0,class1,class2,class3,class4,class5,class6,class7);
 forward TDM_giveRewards();
-forward TDM_getWeaponData(weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo);
+forward TDM_getWeaponData(classid,weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo);
 forward TDM_getColors(color1,color2);
 
 public OnFilterScriptInit()
 {
-	print("\n--------------------------------------");
-	print(" TDM Script -- INITIALIZED!");
-	print("--------------------------------------\n");
-	
-	for(new i = 0;i<2;i++)
+	for(new i = 0;i<8;i++)
 	{
-		Team[i][SpawnX] = Float:CallRemoteFunction("map_GetSpawn","ii",i,0);
-		Team[i][SpawnY] = Float:CallRemoteFunction("map_GetSpawn","ii",i,1);
-		Team[i][SpawnZ] = Float:CallRemoteFunction("map_GetSpawn","ii",i,2);
-		Team[i][SpawnAngle] = Float:CallRemoteFunction("map_GetSpawn","ii",i,3);
+		SkinData[i][SpawnX] = Float:CallRemoteFunction("map_GetSpawn","ii",i,0);
+		SkinData[i][SpawnY] = Float:CallRemoteFunction("map_GetSpawn","ii",i,1);
+		SkinData[i][SpawnZ] = Float:CallRemoteFunction("map_GetSpawn","ii",i,2);
+		SkinData[i][SpawnAngle] = Float:CallRemoteFunction("map_GetSpawn","ii",i,3);
 	}
 	CallRemoteFunction("map_Load","");
 	return 1;
 }
 
-public OnFilterScriptExit()
-{
-	print("\n--------------------------------------");
-	print(" TDM Script -- UNLOADED!");
-	print("--------------------------------------\n");
-	return 1;
-}
-
 public OnPlayerSpawn(playerid)
 {
-	SetPlayerPos(playerid,Team[GetPlayerTeam(playerid)][SpawnX],Team[GetPlayerTeam(playerid)][SpawnY],Team[GetPlayerTeam(playerid)][SpawnZ]);
-	SetPlayerFacingAngle(playerid,Team[GetPlayerTeam(playerid)][SpawnAngle]);
+	new string[124];
+	SetPlayerPos(playerid,SkinData[pInfo[playerid][pClassID]][SpawnX],SkinData[pInfo[playerid][pClassID]][SpawnY],SkinData[pInfo[playerid][pClassID]][SpawnZ]);
+	SetPlayerFacingAngle(playerid,SkinData[pInfo[playerid][pClassID]][SpawnAngle]);
+	SetPlayerTeam(playerid,pInfo[playerid][TeamSelection]);
 	SetPlayerColor(playerid,Team[GetPlayerTeam(playerid)][Color]);
-
 	if(!pInfo[playerid][TeamChosen])
 	{
 		Team[GetPlayerTeam(playerid)][Members]++;
 		pInfo[playerid][TeamChosen] = true;
+		if(GetPlayerTeam(playerid) == 1) format(string,sizeof(string),"<!> You have chosen team %s, Your mission is to kill %s.",Team[1][Name],Team[0][Name]);
+		else format(string,sizeof(string),"<!> You have chosen team %s, Your mission is to kill %s.",Team[0][Name],Team[1][Name]);
+		SendClientMessage(playerid,Team[GetPlayerTeam(playerid)][Color],string);
 	}
-
-	for(new i=0;i<3;i++) { GivePlayerWeapon(playerid,Weapon[i][WeaponID],Weapon[i][Ammo]); }
-
+	printf("%d : %d",SkinData[pInfo[playerid][pClassID]][Weapon1],SkinData[pInfo[playerid][pClassID]][Ammo1]);
+	GivePlayerWeapon(playerid,SkinData[pInfo[playerid][pClassID]][Weapon1],SkinData[pInfo[playerid][pClassID]][Ammo1]);
+	GivePlayerWeapon(playerid,SkinData[pInfo[playerid][pClassID]][Weapon2],SkinData[pInfo[playerid][pClassID]][Ammo2]);
+	GivePlayerWeapon(playerid,SkinData[pInfo[playerid][pClassID]][Weapon3],SkinData[pInfo[playerid][pClassID]][Ammo3]);
     TogglePlayerControllable(playerid,true);
 	return 1;
 }
@@ -86,7 +87,7 @@ public OnPlayerRequestSpawn(playerid)
 	new opp_team = (pInfo[playerid][TeamSelection] == 1)? 0:1;
 	if(Team[pInfo[playerid][TeamSelection]][Members] > Team[opp_team][Members])
 	{
-	    SendClientMessage(playerid,COLOR_RED,"[TEAM BALANCER] This Team is full, choose another!");
+	    SendClientMessage(playerid,COLOR_RED,"<!> [TEAM BALANCER] This Team is full, choose another!");
 	    return 0;
 	}
 	
@@ -101,8 +102,9 @@ public OnPlayerRequestClass(playerid,classid)
 	    Team[GetPlayerTeam(playerid)][Members]--;
 	}
 
-	if(classid == Team[0][ClassID]) pInfo[playerid][TeamSelection] = 0;
+	if(classid == Team[0][ClassID1] || classid == Team[0][ClassID2] || classid == Team[0][ClassID3] || classid == Team[0][ClassID4]) pInfo[playerid][TeamSelection] = 0;
 	else pInfo[playerid][TeamSelection] = 1;
+	pInfo[playerid][pClassID]=classid;
 
 	return 1;
 }
@@ -134,21 +136,28 @@ public TDM_getTeamNames(team1[32],team2[32])
 	return 1;
 }
 
-public TDM_getClassIDs(class1,class2)
+public TDM_getClassIDs(class0,class1,class2,class3,class4,class5,class6,class7)
 {
-	Team[0][ClassID] = class1;
-	Team[1][ClassID] = class2;
+	Team[0][ClassID1] = class0;
+	Team[1][ClassID1] = class1;
+	Team[0][ClassID2] = class2;
+	Team[1][ClassID2] = class3;
+	Team[0][ClassID3] = class4;
+	Team[1][ClassID3] = class5;
+	Team[0][ClassID4] = class6;
+	Team[1][ClassID4] = class7;
 	return 1;
 }
 
-public TDM_getWeaponData(weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo)
+public TDM_getWeaponData(classid,weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo)
 {
-	Weapon[0][WeaponID] = weapon1;
-	Weapon[0][Ammo] = weapon1ammo;
-	Weapon[1][WeaponID] = weapon2;
-	Weapon[1][Ammo] = weapon2ammo;
-	Weapon[2][WeaponID] = weapon3;
-	Weapon[2][Ammo] = weapon3ammo;
+	printf("%d : %d : %d : %d : %d : %d : %d",classid,weapon1,weapon1ammo,weapon2,weapon2ammo,weapon3,weapon3ammo);
+	SkinData[classid][Weapon1] = weapon1;
+	SkinData[classid][Ammo1] = weapon1ammo;
+	SkinData[classid][Weapon2] = weapon2;
+	SkinData[classid][Ammo2] = weapon2ammo;
+	SkinData[classid][Weapon3] = weapon3;
+	SkinData[classid][Ammo3] = weapon3ammo;
 	return 1;
 }
 
@@ -179,6 +188,10 @@ public TDM_giveRewards()
 			{
 				SendClientMessage(i,Team[winning_team][Color],str);
 				//CallRemoteFunction("account_givemoney","ii",i,amount);
+			}
+			if(GetPlayerTeam(i) != winning_team && pInfo[i][TeamChosen])
+			{
+				GameTextForPlayer(i,"~R~MISSION FAILED~w~!",3000,3);
 			}
 		}
 	}	

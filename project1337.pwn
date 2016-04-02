@@ -55,6 +55,8 @@ public TimerFunc()
 		switch(maptype)
 		{
 			case MAP_TYPE_TDM: CallRemoteFunction("TDM_giveRewards","");
+			case MAP_TYPE_PARKOUR: CallRemoteFunction("PARKOUR_giveRewards","");
+			default: CallRemoteFunction("RACE_EndMission","");
 		}
 		KillTimer(mTimer);
 		CallRemoteFunction("cycle_nextMission","");

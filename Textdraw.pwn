@@ -26,7 +26,6 @@ public textdraw_Clock(string[])
 public OnPlayerConnect(playerid)
 {
 	TextDrawShowForPlayer(playerid,Clock);
-	SendClientMessage(playerid,-1,"Test");
 	return 1;
 }
 

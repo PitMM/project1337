@@ -7,8 +7,8 @@
 new Animations= 1; // for animations
 new Shop= 1; //for shop
 new ShopWeapons= 1; //for shop weapon section
-new ShopVehicles= 1; //for shop veh section
-new SafeSpawn= 1; //for safe spawn
+new ShopVehicles= 0; //for shop veh section
+new SafeSpawn= 0; //for safe spawn
 new Fix= 0; // for fix command
 new Flip= 0; //for flip command
 
@@ -17,8 +17,14 @@ new Flip= 0; //for flip command
 #define TEAM_1_NAME "Terrorists"
 #define TEAM_2_NAME "CT"
 
-#define TEAM_1_SKIN 113
-#define TEAM_2_SKIN 285
+#define TEAM_1_SKIN 113 //team 0
+#define TEAM_2_SKIN 285 //team 1
+#define TEAM_3_SKIN 0	//team 0
+#define TEAM_4_SKIN 0   //team 1
+#define TEAM_5_SKIN 0	//team 0
+#define TEAM_6_SKIN 0   //team 1
+#define TEAM_7_SKIN 0	//team 0
+#define TEAM_8_SKIN 0   //team 1
 
 #define WEAPON_1 24
 #define WEAPON_1_AMMO 300
@@ -29,10 +35,66 @@ new Flip= 0; //for flip command
 #define WEAPON_3 16
 #define WEAPON_3_AMMO 1
 
+#define TEAM_1_WEAPON_1 24
+#define TEAM_1_WEAPON_1_AMMO 300
+#define TEAM_1_WEAPON_2 31
+#define TEAM_1_WEAPON_2_AMMO 400
+#define TEAM_1_WEAPON_3 16
+#define TEAM_1_WEAPON_3_AMMO 1
+
+#define TEAM_2_WEAPON_1 24
+#define TEAM_2_WEAPON_1_AMMO 300
+#define TEAM_2_WEAPON_2 31
+#define TEAM_2_WEAPON_2_AMMO 400
+#define TEAM_2_WEAPON_3 16
+#define TEAM_2_WEAPON_3_AMMO 1
+
+#define TEAM_3_WEAPON_1 0
+#define TEAM_3_WEAPON_1_AMMO 0
+#define TEAM_3_WEAPON_2 0
+#define TEAM_3_WEAPON_2_AMMO 0
+#define TEAM_3_WEAPON_3 0
+#define TEAM_3_WEAPON_3_AMMO 0
+
+#define TEAM_4_WEAPON_1 0
+#define TEAM_4_WEAPON_1_AMMO 0
+#define TEAM_4_WEAPON_2 0
+#define TEAM_4_WEAPON_2_AMMO 0
+#define TEAM_4_WEAPON_3 0
+#define TEAM_4_WEAPON_3_AMMO 0
+
+#define TEAM_5_WEAPON_1 0
+#define TEAM_5_WEAPON_1_AMMO 0
+#define TEAM_5_WEAPON_2 0
+#define TEAM_5_WEAPON_2_AMMO 0
+#define TEAM_5_WEAPON_3 0
+#define TEAM_5_WEAPON_3_AMMO 0
+
+#define TEAM_6_WEAPON_1 0
+#define TEAM_6_WEAPON_1_AMMO 0
+#define TEAM_6_WEAPON_2 0
+#define TEAM_6_WEAPON_2_AMMO 0
+#define TEAM_6_WEAPON_3 0
+#define TEAM_6_WEAPON_3_AMMO 0
+
+#define TEAM_7_WEAPON_1 0
+#define TEAM_7_WEAPON_1_AMMO 0
+#define TEAM_7_WEAPON_2 0
+#define TEAM_7_WEAPON_2_AMMO 0
+#define TEAM_7_WEAPON_3 0
+#define TEAM_7_WEAPON_3_AMMO 0
+
+#define TEAM_8_WEAPON_1 0
+#define TEAM_8_WEAPON_1_AMMO 0
+#define TEAM_8_WEAPON_2 0
+#define TEAM_8_WEAPON_2_AMMO 0
+#define TEAM_8_WEAPON_3 0
+#define TEAM_8_WEAPON_3_AMMO 0
+
 #define MAP_INTERIOR 0
 
 new Object[547];
-new Class[2];
+new Class[8];
 new TeamColor[] = { 
 	COLOR_RED,
 	COLOR_BLUE 
@@ -45,8 +107,14 @@ forward map_Load();
 
 new Float:spawns[][] =
 {
-	{308.10001, 372.0, 130.89999, 0.0},
-	{211.8, 382.3, 136.8, 0.0}
+	{308.10001, 372.0, 130.89999, 0.0}, //class 0
+	{211.8, 382.3, 136.8, 0.0}, //class 1
+	{0.0,	0.0,	0.0}, //class 2
+	{0.0,	0.0,	0.0}, //class 3 
+	{0.0,	0.0,	0.0}, //class 4
+	{0.0,	0.0,	0.0}, //class 5
+	{0.0,	0.0,	0.0}, //class 6
+	{0.0,	0.0,	0.0} //class 7
 };
 
 public OnFilterScriptInit()
@@ -601,6 +669,7 @@ public OnFilterScriptInit()
 
     Class[0] = AddPlayerClassEx(0,TEAM_1_SKIN,-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0);
 	Class[1] = AddPlayerClassEx(1,TEAM_2_SKIN,-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0);
+	//...
 
 	return 1;
 }
@@ -668,8 +737,15 @@ public map_ChangeCommandsInfo(ToChange,NewValue)
 public map_Load()
 {
 	CallRemoteFunction("TDM_getTeamNames","ss",TEAM_1_NAME,TEAM_2_NAME);
-	CallRemoteFunction("TDM_getClassIDs","ii",Class[0],Class[1]);
-	CallRemoteFunction("TDM_getWeaponData","iiiiii",WEAPON_1,WEAPON_1_AMMO,WEAPON_2,WEAPON_2_AMMO,WEAPON_3,WEAPON_3_AMMO);
+	CallRemoteFunction("TDM_getClassIDs","iiiiiiii",Class[0],Class[1],Class[2],Class[3],Class[4],Class[5],Class[6],Class[7]); // ADD here more if you have
+	CallRemoteFunction("TDM_getWeaponData","iiiiiii",0,TEAM_1_WEAPON_1,TEAM_1_WEAPON_1_AMMO,TEAM_1_WEAPON_2,TEAM_1_WEAPON_2_AMMO,TEAM_1_WEAPON_3,TEAM_1_WEAPON_3_AMMO);
+	CallRemoteFunction("TDM_getWeaponData","iiiiiii",1,TEAM_2_WEAPON_1,TEAM_2_WEAPON_1_AMMO,TEAM_2_WEAPON_2,TEAM_2_WEAPON_2_AMMO,TEAM_2_WEAPON_3,TEAM_2_WEAPON_3_AMMO);
+	CallRemoteFunction("TDM_getWeaponData","iiiiiii",2,TEAM_3_WEAPON_1,TEAM_3_WEAPON_1_AMMO,TEAM_3_WEAPON_2,TEAM_3_WEAPON_2_AMMO,TEAM_3_WEAPON_3,TEAM_3_WEAPON_3_AMMO);
+	CallRemoteFunction("TDM_getWeaponData","iiiiiii",3,TEAM_4_WEAPON_1,TEAM_4_WEAPON_1_AMMO,TEAM_4_WEAPON_2,TEAM_4_WEAPON_2_AMMO,TEAM_4_WEAPON_3,TEAM_4_WEAPON_3_AMMO);
+	CallRemoteFunction("TDM_getWeaponData","iiiiiii",4,TEAM_5_WEAPON_1,TEAM_5_WEAPON_1_AMMO,TEAM_5_WEAPON_2,TEAM_5_WEAPON_2_AMMO,TEAM_5_WEAPON_3,TEAM_5_WEAPON_3_AMMO);
+	CallRemoteFunction("TDM_getWeaponData","iiiiiii",5,TEAM_6_WEAPON_1,TEAM_6_WEAPON_1_AMMO,TEAM_6_WEAPON_2,TEAM_6_WEAPON_2_AMMO,TEAM_6_WEAPON_3,TEAM_6_WEAPON_3_AMMO);
+	CallRemoteFunction("TDM_getWeaponData","iiiiiii",6,TEAM_7_WEAPON_1,TEAM_7_WEAPON_1_AMMO,TEAM_7_WEAPON_2,TEAM_7_WEAPON_2_AMMO,TEAM_7_WEAPON_3,TEAM_7_WEAPON_3_AMMO);
+	CallRemoteFunction("TDM_getWeaponData","iiiiiii",7,TEAM_8_WEAPON_1,TEAM_8_WEAPON_1_AMMO,TEAM_8_WEAPON_2,TEAM_8_WEAPON_2_AMMO,TEAM_8_WEAPON_3,TEAM_8_WEAPON_3_AMMO);
 	CallRemoteFunction("TDM_getColors","dd",TeamColor[0],TeamColor[1]);
 	
 	return 1;
