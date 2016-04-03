@@ -149,7 +149,7 @@ public OnPlayerSpawn(playerid)
 	}
 	printf("player id : %d spawnid %d",playerid,SpawnID[playerid]);
 	if(SpawnID[playerid] == -1) CurrentSpawn++;
-	SpawnID[playerid]=CurrentSpawn;
+	if(SpawnID[playerid] == -1) SpawnID[playerid]=CurrentSpawn;
 	pCurrentCP[playerid]=0;
 	if(!pAlive[playerid]) TotalRacers++;
 	if(SafeSpawn != 1)

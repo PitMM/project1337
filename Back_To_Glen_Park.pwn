@@ -1,4 +1,4 @@
- //Idea by: Louay. 
+ //Map by: iJumbo. 
 #include <a_samp>
 #include <crashdetect>
 

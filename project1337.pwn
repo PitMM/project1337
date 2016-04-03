@@ -55,7 +55,8 @@ public TimerFunc()
 		switch(maptype)
 		{
 			case MAP_TYPE_TDM: CallRemoteFunction("TDM_giveRewards","");
-			case MAP_TYPE_PARKOUR: CallRemoteFunction("PARKOUR_giveRewards","");
+			case MAP_TYPE_PARKOUR: CallRemoteFunction("PARKOUR_EndMission","");
+			case MAP_TYPE_JUMPERS: CallRemoteFunction("ROOFTOP__EndMission","");
 			default: CallRemoteFunction("RACE_EndMission","");
 		}
 		KillTimer(mTimer);
@@ -96,5 +97,10 @@ CMD:next(playerid)
 {
 	mMin=0;
 	mSec=3;
+	return 1;
+}
+CMD:add(playerid)
+{
+	mMin+=1;
 	return 1;
 }
