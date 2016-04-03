@@ -18,7 +18,9 @@ new MapInfo[][MAP_INFO_enum] = {
 	{2,MAP_TYPE_TDM,"The Caribbeans",5,0,"JimmySpaceTravel1337"}, 
 	{3,MAP_TYPE_RACE,"Reckless Bikers",4,20,"Louay."},
 	{4,MAP_TYPE_RACE,"Fat N Furious 2012",3,20,"JimmySpaceTravel1337"},
-	{5,MAP_TYPE_RACE,"Fat N Furious Beneath The Wheel",4,20,"JimmySpaceTravel1337"}
+	{5,MAP_TYPE_RACE,"Fat N Furious Beneath The Wheel",4,20,"JimmySpaceTravel1337"},
+	{6,MAP_TYPE_PARKOUR,"Back To Glen Park",3,20,"iJumbo"}
+	
 };
 
 new MaxMaps;

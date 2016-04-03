@@ -13,7 +13,7 @@ new Flip= 1;
 #define RACE_VEH 557
 
 #define MapName "RACE:Fat N Furious Beneath The Wheel"
-#define RACE_COLOR 0x008744FF //Different color for each maps!
+#define RACE_COLOR 0x882544FF //Different color for each maps!
 
 #undef MAX_OBJECTS
 #define MAX_OBJECTS (88)

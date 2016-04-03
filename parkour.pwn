@@ -9,6 +9,7 @@ new ParkourGMSec;
 new TotalParkourPlayers;
 new CurrentParkourPos;
 new MAX_CPs;
+new Float:Z_LIMIT;
 
 new PlayerParkourTimer[MAX_PLAYERS];
 new pSec[MAX_PLAYERS];
@@ -33,6 +34,7 @@ public OnFilterScriptInit()
 	ParkourGMTimer = SetTimer("ParkourGMClock",1000,true);
 	MAX_CPs = CallRemoteFunction("map_GetMaxCPs",""); // to check max checkpoints
 	COLOR_PARKOUR = CallRemoteFunction("map_GetParkourColor",""); //to get parkour color
+	Z_LIMIT = Float:CallRemoteFunction("map_Z_AxisLimit","");
 	return 1;
 }
 
@@ -79,6 +81,14 @@ public PlayerParkourClock(playerid)
 		pSec[playerid]=0;
 		pMin[playerid]++;
 	}
+	new Float:x,Float:y,Float:z;
+	GetPlayerPos(playerid,x,y,z);
+	if(z <= Z_LIMIT)
+	{
+		SpawnPlayer(playerid);
+		pAlive[playerid]= false;
+		KillTimer(PlayerParkourTimer[playerid]);
+	}
 	GetPlayerPosition(playerid);
 	//CallRemoteFunction("textdraw_UpdatePlayerMisTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
 	//CallRemoteFunction("textdraw_UpdatePlayerPostion","iii",playerid,GetPlayerPosition(playerid),TotalRacers);
@@ -115,6 +125,7 @@ GetPlayerPosition(playerid)
 public OnPlayerSpawn(playerid)
 {
 	new string[124];
+	SetPlayerHealth(playerid,10000000);
 	switch(ParkourStarted)
 	{
 		case false: 
@@ -137,7 +148,8 @@ public OnPlayerSpawn(playerid)
 	if(!pParkourFinished[playerid])
 	{
 		pMili[playerid]=0,pMin[playerid]=0,pSec[playerid]=0;
-		PlayerParkourTimer[playerid] = SetTimerEx("PlayerParkourClock",100,true,"i",playerid);
+		SetPlayerRaceCheckpoint(playerid,CallRemoteFunction("map_GetCPType","ii",pCurrentCP[playerid],3),GetCP(pCurrentCP[playerid],0),GetCP(pCurrentCP[playerid],1),GetCP(pCurrentCP[playerid],2),GetCP(pCurrentCP[playerid]+1,0),GetCP(pCurrentCP[playerid]+1,1),GetCP(pCurrentCP[playerid]+1,2),10.0);
+		PlayerParkourTimer[playerid] = SetTimerEx("PlayerParkourClock",1000,true,"i",playerid);
 		SetPlayerVirtualWorld(playerid,0);
 	}
 	else
@@ -160,6 +172,7 @@ public OnPlayerDisconnect(playerid,reason)
 public OnPlayerDeath(playerid,killerid,reason)
 {
 	KillTimer(PlayerParkourTimer[playerid]);
+	pAlive[playerid]= false;
 	return 1;
 }
 
@@ -181,7 +194,7 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 		new Pos=GetPlayerPosition(playerid);
 		CurrentParkourPos++;
 		new Prize=floatround(20000/Pos, floatround_round);
-		pMili[playerid]=(((GetTickCount()-pMili[playerid])-(1000*pSec[playerid]))-(1000*60*pMin[playerid]));
+		pMili[playerid]=(((GetTickCount()-pMili[playerid])-(1000*pSec[playerid]))-((1000*60)*pMin[playerid]));
 		//CallRemoteFunction("textdraw_UpdatePlayerParkourTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
 		//CallRemoteFunction("account_givemoney","ii",playerid,Prize);
 		GetPlayerName(playerid,string,sizeof(string));

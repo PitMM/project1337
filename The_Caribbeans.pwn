@@ -486,10 +486,10 @@ public OnPlayerRequestClass(playerid,classid)
 	TogglePlayerControllable(playerid,false);
 
 	SetPlayerInterior(playerid,14);
-	SetPlayerPos(playerid,258.4893,-41.4008,1002.0234);
-	SetPlayerFacingAngle(playerid, 270.0);
-	SetPlayerCameraPos(playerid,256.0815,-43.0475,1004.0234);
-	SetPlayerCameraLookAt(playerid,258.4893,-41.4008,1002.0234);
+	SetPlayerPos(playerid,523.6135,-2421.2612,12.1004);
+	SetPlayerFacingAngle(playerid, 264.9905);
+	SetPlayerCameraPos(playerid,526.6135,-2421.2612,12.1004);
+	SetPlayerCameraLookAt(playerid,523.6135,-2421.2612,12.1004);
 
 	return 1;
 }

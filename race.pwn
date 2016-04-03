@@ -160,7 +160,6 @@ public OnPlayerSpawn(playerid)
 		z=GetSpawn(SpawnID[playerid],2);
 		a=GetSpawn(SpawnID[playerid],3);
 		Veh[playerid]=CreateVehicle(RaceVeh,x,y,z,a,random(255),random(255),-1);
-		printf("Playerid: %d CurrentSpawn: %d SpawnID: %d x: %f y: %f z: %f a: %f",playerid,CurrentSpawn,SpawnID[playerid],x,y,z,a);
 		PutPlayerInVehicle(playerid,Veh[playerid],0);
 		if(!pRaceFinished[playerid])
 		{
@@ -244,6 +243,7 @@ public OnPlayerDeath(playerid,killerid,reason)
 {
 	DestroyVehicle(Veh[playerid]);
 	KillTimer(PlayerRaceTimer[playerid]);
+	pAlive[playerid]= false;
 	return 1;
 }
 
@@ -265,7 +265,7 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 		new Pos=GetPlayerPosition(playerid);
 		CurrentRacePos++;
 		new Prize=floatround(20000/Pos, floatround_round);
-		pMili[playerid]=(((GetTickCount()-pMili[playerid])-(1000*pSec[playerid]))-(1000*60*pMin[playerid]));
+		pMili[playerid]=(((GetTickCount()-pMili[playerid])-(1000*pSec[playerid]))-((1000*60)*pMin[playerid]));
 		//CallRemoteFunction("textdraw_UpdatePlayerMisTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
 		//CallRemoteFunction("account_givemoney","ii",playerid,Prize);
 		GetPlayerName(playerid,string,sizeof(string));
