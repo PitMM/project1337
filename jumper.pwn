@@ -10,7 +10,6 @@ new TotalRooftopPlayers;
 new CurrentRooftopPos;
 new MAX_CPs;
 
-new PlayerRooftopTimer[MAX_PLAYERS];
 new pSec[MAX_PLAYERS];
 new pMin[MAX_PLAYERS];
 new pMili[MAX_PLAYERS];
@@ -22,7 +21,6 @@ Float: GetSpawn(id,coord) return Float: CallRemoteFunction("map_GetSpawn", "ii",
 Float: GetCP(cp_id,coord) return Float: CallRemoteFunction("map_RooftopCPs", "ii", cp_id,coord);
 
 forward RooftopGMClock();
-forward PlayerRooftopClock(playerid);
 forward SafeSpawnFun(playerid);
 forward ROOFTOP_EndMission();
 
@@ -61,27 +59,29 @@ public RooftopGMClock()
 					RooftopStarted= true;
 					for(new i=0; i < MAX_PLAYERS; i++) if(pAlive[i]) TogglePlayerControllable(i,true);
 					SendClientMessageToAll(COLOR_ROOFTOP,"<!> AAAAAAHHH! The rooftop jumper has started. Good luck.");
-					KillTimer(RooftopGMTimer);
+				}
+			}
+		}
+		case true:
+		{
+			for(new i=0; i<MAX_PLAYERS; i++)
+			{
+				if(i != INVALID_PLAYER_ID && pAlive[i] && !pRooftopFinished[i])
+				{
+					pSec[i]++;
+					if(pMili[i] == 0) pMili[i]=GetTickCount();
+					if(pSec[i] == 60)
+					{
+						pSec[i]=0;
+						pMin[i]++;
+					}
+					GetPlayerPosition(i);
+					//CallRemoteFunction("textdraw_UpdatePlayerMisTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
+					//CallRemoteFunction("textdraw_UpdatePlayerPostion","iii",playerid,GetPlayerPosition(playerid),TotalRooftopPlayers);
 				}
 			}
 		}
 	}	
-}
-
-public PlayerRooftopClock(playerid)
-{
-	if(!RooftopStarted) return 1;
-	pSec[playerid]++;
-	if(pMili[playerid] == 0) pMili[playerid]=GetTickCount();
-	if(pSec[playerid] == 60)
-	{
-		pSec[playerid]=0;
-		pMin[playerid]++;
-	}
-	GetPlayerPosition(playerid);
-	//CallRemoteFunction("textdraw_UpdatePlayerMisTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
-	//CallRemoteFunction("textdraw_UpdatePlayerPostion","iii",playerid,GetPlayerPosition(playerid),TotalRacers);
-	return 1;
 }
 
 GetPlayerPosition(playerid)
@@ -138,7 +138,6 @@ public OnPlayerSpawn(playerid)
 	{
 		pMili[playerid]=0,pMin[playerid]=0,pSec[playerid]=0;
 		SetPlayerRaceCheckpoint(playerid,CallRemoteFunction("map_GetCPType","ii",pCurrentCP[playerid],3),GetCP(pCurrentCP[playerid],0),GetCP(pCurrentCP[playerid],1),GetCP(pCurrentCP[playerid],2),GetCP(pCurrentCP[playerid]+1,0),GetCP(pCurrentCP[playerid]+1,1),GetCP(pCurrentCP[playerid]+1,2),10.0);
-		PlayerRooftopTimer[playerid] = SetTimerEx("PlayerRooftopClock",1000,true,"i",playerid);
 		SetPlayerVirtualWorld(playerid,0);
 	}
 	else
@@ -151,7 +150,6 @@ public OnPlayerSpawn(playerid)
 
 public OnPlayerDisconnect(playerid,reason)
 {
-	KillTimer(PlayerRooftopTimer[playerid]);
 	if(!pRooftopFinished[playerid]) TotalRooftopPlayers--;
 	else pRooftopFinished[playerid] = false;
 	pAlive[playerid]= false;
@@ -160,7 +158,6 @@ public OnPlayerDisconnect(playerid,reason)
 
 public OnPlayerDeath(playerid,killerid,reason)
 {
-	KillTimer(PlayerRooftopTimer[playerid]);
 	pAlive[playerid]= false;
 	return 1;
 }
@@ -178,21 +175,20 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 	else if(pCurrentCP[playerid] == MAX_CPs-1)
 	{
 		pRooftopFinished[playerid]= true;
-		KillTimer(PlayerRooftopTimer[playerid]);
 		DisablePlayerRaceCheckpoint(playerid);
 		new Pos=GetPlayerPosition(playerid);
 		CurrentRooftopPos++;
-		new Prize=floatround(20000/Pos, floatround_round);
+		new Prize=floatround(20000/Pos, floatround_round)+(100*TotalRooftopPlayers);
 		pMili[playerid]=(((GetTickCount()-pMili[playerid])-(1000*pSec[playerid]))-((1000*60)*pMin[playerid]));
 		//CallRemoteFunction("textdraw_UpdatePlayerRooftopTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
 		//CallRemoteFunction("account_givemoney","ii",playerid,Prize);
 		GetPlayerName(playerid,string,sizeof(string));
 		switch(Pos)
 		{
-			case 1: format(string,sizeof(string),"<!> %s (%d) Has finished 1st in the rooftop jumper. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin,pSec,pMili,Prize);
-			case 2: format(string,sizeof(string),"<!> %s (%d) Has finished 2nd in the rooftop jumper. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin,pSec,pMili,Prize);
-			case 3: format(string,sizeof(string),"<!> %s (%d) Has finished 3rd in the rooftop jumper. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin,pSec,pMili,Prize);
-			default: format(string,sizeof(string),"<!> %s (%d) Has finished %d out of %d. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,Pos,TotalRooftopPlayers,pMin,pSec,pMili,Prize);
+			case 1: format(string,sizeof(string),"<!> %s (%d) Has finished 1st in the rooftop jumper. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin[playerid],pSec[playerid],pMili[playerid],Prize);
+			case 2: format(string,sizeof(string),"<!> %s (%d) Has finished 2nd in the rooftop jumper. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin[playerid],pSec[playerid],pMili[playerid],Prize);
+			case 3: format(string,sizeof(string),"<!> %s (%d) Has finished 3rd in the rooftop jumper. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin[playerid],pSec[playerid],pMili[playerid],Prize);
+			default: format(string,sizeof(string),"<!> %s (%d) Has finished (%02d/%02d). Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,Pos,TotalRooftopPlayers,pMin[playerid],pSec[playerid],pMili[playerid],Prize);
 		}
 		
 		SetPlayerVirtualWorld(playerid,2);
@@ -205,6 +201,7 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 
 public ROOFTOP_EndMission()
 {
+	KillTimer(RooftopGMTimer);
 	SendClientMessageToAll(COLOR_ROOFTOP,"<!> The rooftop jumper has ended.");
 	for(new i=0; i < MAX_PLAYERS; i++)
 	{

@@ -14,7 +14,6 @@ new CurrentRacePos;
 new SafeSpawn;
 new MAX_CPs;
 
-new PlayerRaceTimer[MAX_PLAYERS];
 new pSec[MAX_PLAYERS];
 new pMin[MAX_PLAYERS];
 new pMili[MAX_PLAYERS];
@@ -23,13 +22,13 @@ new SpawnID[MAX_PLAYERS]=-1;
 new bool:pAlive[MAX_PLAYERS];
 new Veh[MAX_PLAYERS];
 new bool:pRaceFinished[MAX_PLAYERS]= false;
+new Ghost_Mode_Time;
 
 Float: GetSpawn(id,coord) return Float: CallRemoteFunction("map_GetSpawn", "ii",id,coord); 
 Float: GetCP(cp_id,coord) return Float: CallRemoteFunction("map_RaceCPs", "ii", cp_id,coord);
 native IsValidVehicle(vehicleid);
 
 forward RaceGMClock();
-forward PlayerRaceClock(playerid);
 forward SafeSpawnFun(playerid);
 forward RACE_EndMission();
 
@@ -42,6 +41,7 @@ public OnFilterScriptInit()
 	SafeSpawn = CallRemoteFunction("map_CommandsInfo","i",0); // to check if mission has safe spawn
 	MAX_CPs = CallRemoteFunction("map_GetMaxCPs",""); // to check max checkpoints
 	COLOR_RACE = CallRemoteFunction("map_GetRaceColor",""); //to get race color
+	Ghost_Mode_Time= CallRemoteFunction("map_GetGhostModeTime","");
 	for(new i=0; i <  MAX_PLAYERS; i++)
 	{
 		SpawnID[i]=-1;
@@ -80,27 +80,42 @@ public RaceGMClock()
 					RaceStarted= true;
 					for(new i=0; i < MAX_PLAYERS; i++) if(pAlive[i]) TogglePlayerControllable(i,true);
 					SendClientMessageToAll(COLOR_RACE,"<!> KA BOOM! The race has started. Good luck.");
-					KillTimer(RaceGMTimer);
+				}
+			}
+			if(Ghost_Mode_Time > 0) 
+			{
+				for(new i=0; i<MAX_PLAYERS; i++) DisableRemoteVehicleCollisions(i,1);
+			}
+		}
+		case true:
+		{
+			if(Ghost_Mode_Time > 0) 
+			{
+				Ghost_Mode_Time--;
+				if(Ghost_Mode_Time == 0)
+				{
+					for(new i=0; i<MAX_PLAYERS; i++) DisableRemoteVehicleCollisions(i,0);
+					SendClientMessageToAll(COLOR_RACE,"<!> Ghost mode has been disabled by the server.");
+				}
+			}
+			for(new i=0; i<MAX_PLAYERS; i++)
+			{
+				if(i != INVALID_PLAYER_ID && pAlive[i] && !pRaceFinished[i])
+				{
+					pSec[i]++;
+					if(pMili[i] == 0) pMili[i]=GetTickCount();
+					if(pSec[i] == 60)
+					{
+						pSec[i]=0;
+						pMin[i]++;
+					}
+					GetPlayerPosition(i);
+					//CallRemoteFunction("textdraw_UpdatePlayerMisTime","iiii",playerid,pMin[i],pSec[i],pMili[i]);
+					//CallRemoteFunction("textdraw_UpdatePlayerPostion","iii",playerid,GetPlayerPosition(i),TotalRacers);
 				}
 			}
 		}
 	}	
-}
-
-public PlayerRaceClock(playerid)
-{
-	if(!RaceStarted) return 1;
-	pSec[playerid]++;
-	if(pMili[playerid] == 0) pMili[playerid]=GetTickCount();
-	if(pSec[playerid] == 60)
-	{
-		pSec[playerid]=0;
-		pMin[playerid]++;
-	}
-	GetPlayerPosition(playerid);
-	//CallRemoteFunction("textdraw_UpdatePlayerMisTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
-	//CallRemoteFunction("textdraw_UpdatePlayerPostion","iii",playerid,GetPlayerPosition(playerid),TotalRacers);
-	return 1;
 }
 
 GetPlayerPosition(playerid)
@@ -147,7 +162,12 @@ public OnPlayerSpawn(playerid)
 			SendClientMessage(playerid,COLOR_RACE,"<!> HURRY UP! The race has already started.");
 		}	
 	}
-	printf("player id : %d spawnid %d",playerid,SpawnID[playerid]);
+	if(Ghost_Mode_Time > 0)
+	{
+		DisableRemoteVehicleCollisions(playerid,1);
+		format(string,sizeof(string),"<!> The Ghost mode will last for %d seconds.",Ghost_Mode_Time);
+		SendClientMessage(playerid,COLOR_RACE,string);
+	}
 	if(SpawnID[playerid] == -1) CurrentSpawn++;
 	if(SpawnID[playerid] == -1) SpawnID[playerid]=CurrentSpawn;
 	pCurrentCP[playerid]=0;
@@ -164,7 +184,6 @@ public OnPlayerSpawn(playerid)
 		if(!pRaceFinished[playerid])
 		{
 			pMili[playerid]=0,pMin[playerid]=0,pSec[playerid]=0;
-			PlayerRaceTimer[playerid] = SetTimerEx("PlayerRaceClock",1000,true,"i",playerid);
 			SetVehicleVirtualWorld(Veh[playerid], 0);
 			SetPlayerVirtualWorld(playerid,0);
 			SetPlayerRaceCheckpoint(playerid,CallRemoteFunction("map_GetCPType","ii",pCurrentCP[playerid],3),GetCP(pCurrentCP[playerid],0),GetCP(pCurrentCP[playerid],1),GetCP(pCurrentCP[playerid],2),GetCP(pCurrentCP[playerid]+1,0),GetCP(pCurrentCP[playerid]+1,1),GetCP(pCurrentCP[playerid]+1,2),10.0);
@@ -183,7 +202,6 @@ public OnPlayerSpawn(playerid)
 		if(!pRaceFinished[playerid])
 		{
 			pMili[playerid]=0,pMin[playerid]=0,pSec[playerid]=0;
-			PlayerRaceTimer[playerid] = SetTimerEx("PlayerRaceClock",1000,true,"i",playerid);
 		}
 	}
 	EnableVehicleFriendlyFire();
@@ -194,7 +212,6 @@ public SafeSpawnFun(playerid)
 {
 	Veh[playerid]=CreateVehicle(RaceVeh,GetSpawn(SpawnID[playerid],0),GetSpawn(SpawnID[playerid],1),GetSpawn(SpawnID[playerid],2),GetSpawn(SpawnID[playerid],3),random(255),random(255),15);
 	PutPlayerInVehicle(playerid,Veh[playerid],0);
-	PlayerRaceTimer[playerid] = SetTimerEx("PlayerRaceClock",1000,true,"i",playerid);
 	pAlive= true;
 	if(!pRaceFinished[playerid])
 	{
@@ -213,7 +230,6 @@ public SafeSpawnFun(playerid)
 public OnPlayerDisconnect(playerid,reason)
 {
 	DestroyVehicle(Veh[playerid]);
-	KillTimer(PlayerRaceTimer[playerid]);
 	if(!pRaceFinished[playerid]) TotalRacers--;
 	else pRaceFinished[playerid] = false;
 	pAlive[playerid]= false;
@@ -242,7 +258,6 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 public OnPlayerDeath(playerid,killerid,reason)
 {
 	DestroyVehicle(Veh[playerid]);
-	KillTimer(PlayerRaceTimer[playerid]);
 	pAlive[playerid]= false;
 	return 1;
 }
@@ -260,21 +275,20 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 	else if(pCurrentCP[playerid] == MAX_CPs-1)
 	{
 		pRaceFinished[playerid]= true;
-		KillTimer(PlayerRaceTimer[playerid]);
 		DisablePlayerRaceCheckpoint(playerid);
 		new Pos=GetPlayerPosition(playerid);
 		CurrentRacePos++;
-		new Prize=floatround(20000/Pos, floatround_round);
+		new Prize=floatround(20000/Pos, floatround_round)+(100*TotalRacers);
 		pMili[playerid]=(((GetTickCount()-pMili[playerid])-(1000*pSec[playerid]))-((1000*60)*pMin[playerid]));
 		//CallRemoteFunction("textdraw_UpdatePlayerMisTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
 		//CallRemoteFunction("account_givemoney","ii",playerid,Prize);
 		GetPlayerName(playerid,string,sizeof(string));
 		switch(Pos)
 		{
-			case 1: format(string,sizeof(string),"<!> %s (%d) Has finished 1st in the race. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin,pSec,pMili,Prize);
-			case 2: format(string,sizeof(string),"<!> %s (%d) Has finished 2nd in the race. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin,pSec,pMili,Prize);
-			case 3: format(string,sizeof(string),"<!> %s (%d) Has finished 3rd in the race. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin,pSec,pMili,Prize);
-			default: format(string,sizeof(string),"<!> %s (%d) Has finished %d out of %d. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,Pos,TotalRacers,pMin,pSec,pMili,Prize);
+			case 1: format(string,sizeof(string),"<!> %s (%d) Has finished 1st in the race. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin[playerid],pSec[playerid],pMili[playerid],Prize);
+			case 2: format(string,sizeof(string),"<!> %s (%d) Has finished 2nd in the race. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin[playerid],pSec[playerid],pMili[playerid],Prize);
+			case 3: format(string,sizeof(string),"<!> %s (%d) Has finished 3rd in the race. Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,pMin[playerid],pSec[playerid],pMili[playerid],Prize);
+			default: format(string,sizeof(string),"<!> %s (%d) Has finished (%02d/%02d). Time Taken: %02d:%02d:%03d | Prize: ($%d).",string,playerid,Pos,TotalRacers,pMin[playerid],pSec[playerid],pMili[playerid],Prize);
 		}
 		
 		SetVehicleVirtualWorld(Veh[playerid], 2);
@@ -288,6 +302,7 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 
 public RACE_EndMission()
 {
+	KillTimer(RaceGMTimer);
 	SendClientMessageToAll(COLOR_RACE,"<!> The race has ended.");
 	for(new i=0; i < MAX_PLAYERS; i++)
 	{

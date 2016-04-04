@@ -12,7 +12,9 @@ new SafeSpawn= 0; //for safe spawn
 new Fix= 0; // for fix command
 new Flip= 0; //for flip command
 
-#define MapName "De_Dust 2" //Exmple Name
+#define MapName "De_Dust 2" 
+
+#define Health 99
 
 #define TEAM_1_NAME "Terrorists"
 #define TEAM_2_NAME "CT"
@@ -104,6 +106,7 @@ forward Float:map_GetSpawn(id,coord);
 forward map_CommandsInfo(data);
 forward map_ChangeCommandsInfo(ToChange,NewValue);
 forward map_Load();
+forward map_GetHealth();
 
 new Float:spawns[][] =
 {
@@ -750,3 +753,5 @@ public map_Load()
 	
 	return 1;
 }
+
+public map_GetHealth() return Health;

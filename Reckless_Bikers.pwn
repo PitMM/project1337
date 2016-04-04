@@ -16,6 +16,8 @@ new Flip= 1;
 #define MapName "RACE:Reckless Bikers"
 #define RACE_COLOR 0xffd700FF //Different color for each maps!
 
+#define GHOST_MODE 15
+
 #undef MAX_OBJECTS
 #define MAX_OBJECTS (158)
 
@@ -41,6 +43,7 @@ forward map_CommandsInfo(data);
 forward map_ChangeCommandsInfo(ToChange,NewValue);
 forward map_GetRaceVehicle();
 forward map_GetRaceColor();
+forward map_GetGhostModeTime();
 
 new race_cp[MAX_CPs][race_cp_enum] =
 {
@@ -338,3 +341,6 @@ public map_ChangeCommandsInfo(ToChange,NewValue)
 	}
 	return 1;
 }
+
+
+public map_GetGhostModeTime() return GHOST_MODE;

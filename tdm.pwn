@@ -40,6 +40,8 @@ new SkinData[8][skindata];
 new Team[2][teamdata];
 new pInfo[MAX_PLAYERS][playerdata];
 
+new Health;
+
 forward TDM_getTeamNames(team1[32],team2[32]);
 forward TDM_getClassIDs(class0,class1,class2,class3,class4,class5,class6,class7);
 forward TDM_giveRewards();
@@ -56,6 +58,7 @@ public OnFilterScriptInit()
 		SkinData[i][SpawnAngle] = Float:CallRemoteFunction("map_GetSpawn","ii",i,3);
 	}
 	CallRemoteFunction("map_Load","");
+	Health = CallRemoteFunction("map_GetHealth","");
 	return 1;
 }
 
@@ -78,6 +81,7 @@ public OnPlayerSpawn(playerid)
 	GivePlayerWeapon(playerid,SkinData[pInfo[playerid][pClassID]][Weapon2],SkinData[pInfo[playerid][pClassID]][Ammo2]);
 	GivePlayerWeapon(playerid,SkinData[pInfo[playerid][pClassID]][Weapon3],SkinData[pInfo[playerid][pClassID]][Ammo3]);
     TogglePlayerControllable(playerid,true);
+	SetPlayerHealth(playerid,Health);
 	return 1;
 }
 
@@ -113,6 +117,8 @@ public OnPlayerDeath(playerid, killerid, reason)
 	if(killerid != INVALID_PLAYER_ID && GetPlayerTeam(playerid) != NO_TEAM)
 	{
 	    Team[GetPlayerTeam(killerid)][Kills]++;
+		new score=GetPlayerScore(killerid);
+		SetPlayerScore(killerid,score+1);
 	    //CallRemoteFunction("textdraw_updateTDM","sisi",TeamName[0],Kills[0],TeamName[1],Kills[1]);
 	}
 	return 1;

@@ -15,6 +15,8 @@ new Flip= 1;
 #define MapName "RACE:Fat N Furious Beneath The Wheel"
 #define RACE_COLOR 0x882544FF //Different color for each maps!
 
+#define GHOST_MODE 40
+
 #undef MAX_OBJECTS
 #define MAX_OBJECTS (88)
 
@@ -40,6 +42,7 @@ forward map_CommandsInfo(data);
 forward map_ChangeCommandsInfo(ToChange,NewValue);
 forward map_GetRaceVehicle();
 forward map_GetRaceColor();
+forward map_GetGhostModeTime();
 
 new race_cp[MAX_CPs][race_cp_enum] =
 {
@@ -290,3 +293,5 @@ public map_ChangeCommandsInfo(ToChange,NewValue)
 	}
 	return 1;
 }
+
+public map_GetGhostModeTime() return GHOST_MODE;

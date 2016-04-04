@@ -6,5 +6,7 @@ new MapName[][]=
 	"Reckless_Bikers",
 	"Fat_N_Furious_2012",
 	"Fat_N_Furious_Beneath_The_Wheel",
-	"Back_To_Glen_Park"
+	"Back_To_Glen_Park",
+	"To_The_Clown",
+	"Desert_Storm"
 };
