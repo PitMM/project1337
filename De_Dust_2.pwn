@@ -19,65 +19,56 @@ new Flip= 0; //for flip command
 #define TEAM_1_NAME "Terrorists"
 #define TEAM_2_NAME "CT"
 
-#define TEAM_1_SKIN 113 //team 0
+#define TEAM_1_SKIN 47 //team 0
 #define TEAM_2_SKIN 285 //team 1
-#define TEAM_3_SKIN 0	//team 0
-#define TEAM_4_SKIN 0   //team 1
-#define TEAM_5_SKIN 0	//team 0
-#define TEAM_6_SKIN 0   //team 1
+#define TEAM_3_SKIN 181	//team 0
+#define TEAM_4_SKIN 287   //team 1
+#define TEAM_5_SKIN 184	//team 0
+#define TEAM_6_SKIN 286   //team 1
 #define TEAM_7_SKIN 0	//team 0
 #define TEAM_8_SKIN 0   //team 1
 
-#define WEAPON_1 24
-#define WEAPON_1_AMMO 300
-
-#define WEAPON_2 31
-#define WEAPON_2_AMMO 400
-
-#define WEAPON_3 16
-#define WEAPON_3_AMMO 1
-
-#define TEAM_1_WEAPON_1 24
+#define TEAM_1_WEAPON_1 25
 #define TEAM_1_WEAPON_1_AMMO 300
-#define TEAM_1_WEAPON_2 31
+#define TEAM_1_WEAPON_2 32
 #define TEAM_1_WEAPON_2_AMMO 400
 #define TEAM_1_WEAPON_3 16
 #define TEAM_1_WEAPON_3_AMMO 1
 
 #define TEAM_2_WEAPON_1 24
 #define TEAM_2_WEAPON_1_AMMO 300
-#define TEAM_2_WEAPON_2 31
-#define TEAM_2_WEAPON_2_AMMO 400
+#define TEAM_2_WEAPON_2 34
+#define TEAM_2_WEAPON_2_AMMO 100
 #define TEAM_2_WEAPON_3 16
 #define TEAM_2_WEAPON_3_AMMO 1
 
-#define TEAM_3_WEAPON_1 0
-#define TEAM_3_WEAPON_1_AMMO 0
-#define TEAM_3_WEAPON_2 0
-#define TEAM_3_WEAPON_2_AMMO 0
-#define TEAM_3_WEAPON_3 0
-#define TEAM_3_WEAPON_3_AMMO 0
+#define TEAM_3_WEAPON_1 24
+#define TEAM_3_WEAPON_1_AMMO 300
+#define TEAM_3_WEAPON_2 34
+#define TEAM_3_WEAPON_2_AMMO 100
+#define TEAM_3_WEAPON_3 16
+#define TEAM_3_WEAPON_3_AMMO 1
 
-#define TEAM_4_WEAPON_1 0
-#define TEAM_4_WEAPON_1_AMMO 0
-#define TEAM_4_WEAPON_2 0
-#define TEAM_4_WEAPON_2_AMMO 0
-#define TEAM_4_WEAPON_3 0
-#define TEAM_4_WEAPON_3_AMMO 0
+#define TEAM_4_WEAPON_1 24
+#define TEAM_4_WEAPON_1_AMMO 300
+#define TEAM_4_WEAPON_2 31
+#define TEAM_4_WEAPON_2_AMMO 400
+#define TEAM_4_WEAPON_3 16
+#define TEAM_4_WEAPON_3_AMMO 1
 
-#define TEAM_5_WEAPON_1 0
-#define TEAM_5_WEAPON_1_AMMO 0
-#define TEAM_5_WEAPON_2 0
-#define TEAM_5_WEAPON_2_AMMO 0
-#define TEAM_5_WEAPON_3 0
-#define TEAM_5_WEAPON_3_AMMO 0
+#define TEAM_5_WEAPON_1 24
+#define TEAM_5_WEAPON_1_AMMO 300
+#define TEAM_5_WEAPON_2 30
+#define TEAM_5_WEAPON_2_AMMO 400
+#define TEAM_5_WEAPON_3 16
+#define TEAM_5_WEAPON_3_AMMO 1
 
-#define TEAM_6_WEAPON_1 0
-#define TEAM_6_WEAPON_1_AMMO 0
-#define TEAM_6_WEAPON_2 0
-#define TEAM_6_WEAPON_2_AMMO 0
-#define TEAM_6_WEAPON_3 0
-#define TEAM_6_WEAPON_3_AMMO 0
+#define TEAM_6_WEAPON_1 27
+#define TEAM_6_WEAPON_1_AMMO 250
+#define TEAM_6_WEAPON_2 29
+#define TEAM_6_WEAPON_2_AMMO 400
+#define TEAM_6_WEAPON_3 16
+#define TEAM_6_WEAPON_3_AMMO 1
 
 #define TEAM_7_WEAPON_1 0
 #define TEAM_7_WEAPON_1_AMMO 0
@@ -110,12 +101,12 @@ forward map_GetHealth();
 
 new Float:spawns[][] =
 {
-	{308.10001, 372.0, 130.89999, 0.0}, //class 0
-	{211.8, 382.3, 136.8, 0.0}, //class 1
-	{0.0,	0.0,	0.0}, //class 2
-	{0.0,	0.0,	0.0}, //class 3 
-	{0.0,	0.0,	0.0}, //class 4
-	{0.0,	0.0,	0.0}, //class 5
+	{211.8, 382.3, 136.8, 0.0}, //class 0
+	{308.10001, 372.0, 130.89999, 0.0}, //class 1
+	{211.8, 382.3, 136.8, 0.0}, //class 2
+	{308.10001, 372.0, 130.89999, 0.0}, //class 3 
+	{211.8, 382.3, 136.8, 0.0}, //class 4
+	{308.10001, 372.0, 130.89999, 0.0}, //class 5
 	{0.0,	0.0,	0.0}, //class 6
 	{0.0,	0.0,	0.0} //class 7
 };
@@ -672,6 +663,10 @@ public OnFilterScriptInit()
 
     Class[0] = AddPlayerClassEx(0,TEAM_1_SKIN,-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0);
 	Class[1] = AddPlayerClassEx(1,TEAM_2_SKIN,-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0);
+	Class[2] = AddPlayerClassEx(0,TEAM_3_SKIN,-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0);
+	Class[3] = AddPlayerClassEx(1,TEAM_4_SKIN,-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0);
+	Class[4] = AddPlayerClassEx(0,TEAM_5_SKIN,-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0);
+	Class[5] = AddPlayerClassEx(1,TEAM_6_SKIN,-2431.9709,-1619.5594,526.4762,297.8344,0,0,0,0,0,0);
 	//...
 
 	return 1;
@@ -680,7 +675,8 @@ public OnFilterScriptInit()
 public OnPlayerRequestClass(playerid,classid)
 {
 	TogglePlayerControllable(playerid,false);
-
+	if(classid == Class[0] || classid == Class[2] || classid == Class[4] || classid == Class[6]) GameTextForPlayer(playerid,TEAM_1_NAME,1000,3);
+	else GameTextForPlayer(playerid,TEAM_2_NAME,1000,3);
 	SetPlayerInterior(playerid,MAP_INTERIOR);
 	SetPlayerPos(playerid,259.3186,375.9532,133.4554);
 	SetPlayerFacingAngle(playerid,356.9101);

@@ -15,10 +15,11 @@ forward EndMission();
 
 public OnGameModeInit()
 {
+	CallRemoteFunction("Textdraw_SetUp","");
 	mapid = CallRemoteFunction("cycle_getcurrentid",""); //Get's map id from CycleHandler
 	maptype = CallRemoteFunction("cycle_getcurrentmode",""); //Get's map type from CycleHandler
 	CallRemoteFunction("maphandler_init","i",mapid); //initialize the map handler	
-	CallRemoteFunction("Textdraw_SetUp","");
+	SendRconCommand("password 1332");
 	switch(maptype)
 	{
 		case MAP_TYPE_BOMBING: SendRconCommand("loadfs /MissionType/bombing");
@@ -87,6 +88,7 @@ public EndMission()
 		case MAP_TYPE_DM: CallRemoteFunction("DM_giveRewards","");
 		case MAP_TYPE_PARKOUR: CallRemoteFunction("PARKOUR_EndMission","");
 		case MAP_TYPE_JUMPERS: CallRemoteFunction("ROOFTOP_EndMission","");
+		case MAP_TYPE_STEALING: CallRemoteFunction("STEAL_giveRewards","");
 		default: CallRemoteFunction("RACE_EndMission","");
 	}
 	KillTimer(mTimer);

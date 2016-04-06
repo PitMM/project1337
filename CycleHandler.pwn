@@ -21,7 +21,8 @@ new MapInfo[][MAP_INFO_enum] = {
 	{5,MAP_TYPE_RACE,"Fat N Furious Beneath The Wheel",4,20,"JimmySpaceTravel1337"},
 	{6,MAP_TYPE_PARKOUR,"Back To Glen Park",3,20,"iJumbo"},
 	{7,MAP_TYPE_JUMPERS,"To The Clown" ,4,20,"Sasuke_Uchiha"},
-	{8,MAP_TYPE_DM,"Desert Storm",4,20,"JimmySpaceTravel1337"}
+	{8,MAP_TYPE_DM,"Desert Storm",4,20,"JimmySpaceTravel1337"},
+	{9,MAP_TYPE_STEALING,"Grand Theft Shamal",6,0,"JimmySpaceTravel1337"}
 };
 
 new MaxMaps;

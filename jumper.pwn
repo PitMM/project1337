@@ -180,6 +180,11 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 		CurrentRooftopPos++;
 		new Prize=floatround(20000/Pos, floatround_round)+(100*TotalRooftopPlayers);
 		pMili[playerid]=(((GetTickCount()-pMili[playerid])-(1000*pSec[playerid]))-((1000*60)*pMin[playerid]));
+		for(new i=0; i<11; i++)
+		{
+			if(pMili[playerid] > 1000) pMili[playerid]-=1000;
+			else break;
+		}
 		//CallRemoteFunction("textdraw_UpdatePlayerRooftopTime","iiii",playerid,pMin[playerid],pSec[playerid],pMili[playerid]);
 		//CallRemoteFunction("account_givemoney","ii",playerid,Prize);
 		GetPlayerName(playerid,string,sizeof(string));

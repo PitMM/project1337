@@ -10,13 +10,14 @@ forward maphandler_init(mapid);
 public maphandler_init(mapid)
 {
 	new string[70];
-	format(string,sizeof(string),"loadfs /Maps/%s",MapName[mapid]);
+	format(string,sizeof(string),"loadfs /Maps/%s",MapName[mapid][name]);
 	SendRconCommand(string);
-	format(string,sizeof(string),"gamemodetext %s",MapName[mapid]);
+	format(string,sizeof(string),"gamemodetext %s",MapName[mapid][name]);
 	SendRconCommand(string);
 	CallRemoteFunction("GM_StartTimer","");
-	format(string,sizeof(string),"<!> Mission %s has sucessfully intizlized.",MapName[mapid]);
+	format(string,sizeof(string),"<!> Mission %s has sucessfully intizlized.",MapName[mapid][name]);
 	SendClientMessageToAll(COLOR_CYCLE,string);
+	CallRemoteFunction("textdraw_UpdateMissionName","ss",MapName[mapid][name],MapName[mapid][by]);
 	return 1;
 }
 

@@ -10,6 +10,8 @@
 
 #define COLOR_CYCLE 0x4285f4FF
 #define COL_CYCLE "{4285f4}"
+#define COL_WHITE "{FFFFFF}"
+#define COL_BLUE "{4285f4}"
 
 //#define COLOR_RACE 0xbb2cffFF
 //#define COL_RACE "{bb2cff}"

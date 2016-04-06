@@ -485,7 +485,8 @@ public OnFilterScriptInit()
 public OnPlayerRequestClass(playerid,classid)
 {
 	TogglePlayerControllable(playerid,false);
-
+	if(classid == Class[0] || classid == Class[2] || classid == Class[4] || classid == Class[6]) GameTextForPlayer(playerid,TEAM_1_NAME,1000,3);
+	else GameTextForPlayer(playerid,TEAM_2_NAME,1000,3);
 	SetPlayerInterior(playerid,MAP_INTERIOR);
 	SetPlayerPos(playerid,523.6135,-2421.2612,12.1004);
 	SetPlayerFacingAngle(playerid, 264.9905);
